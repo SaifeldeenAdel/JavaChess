@@ -15,9 +15,12 @@ public class King extends Piece {
 
         return true;
     }
+
 //    public boolean isInCheck(){
 //        for(int rank = 0; rank<Constants.BOARD_HEIGHT; rank++){
-//            for(int )
+//            for(int file =0; file<Constants.BOARD_WIDTH; file++){
+//                if(this.getBoard().getSquare(rank, file) )
+//            }
 //        }
 //    }
 

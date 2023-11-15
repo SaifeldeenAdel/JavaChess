@@ -39,7 +39,9 @@ public class Board {
         squares[7][5].setPiece(new Bishop(this, squares[0][5], Color.BLACK));
         squares[7][6].setPiece(new Knight(this, squares[0][6], Color.BLACK));
         squares[7][7].setPiece(new Rook(this, squares[0][7], Color.BLACK));
-        squares[5][1].setPiece(new Queen(this, squares[5][1], Color.BLACK));
+
+//        squares[5][1].setPiece(new Bishop(this, squares[5][1], Color.BLACK));
+//        squares[3][3].setPiece(new Bishop(this, squares[3][3], Color.WHITE));
 
     }
 
@@ -63,7 +65,7 @@ public class Board {
     }
 
     public void displayBoard(){
-        ArrayList<Square> legal = squares[5][1].getPiece().getAllLegalMoves();
+        ArrayList<Square> legal = squares[3][3].getPiece().getAllLegalMoves();
 //        ArrayList<Square> legal = new ArrayList<>();
         for(int rank = Constants.BOARD_HEIGHT -1; rank >=0 ; rank--){
             System.out.println("------------------------------------");
