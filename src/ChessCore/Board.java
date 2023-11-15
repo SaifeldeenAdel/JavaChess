@@ -3,20 +3,20 @@ package ChessCore;
 import java.util.ArrayList;
 
 public class Board {
-    private Square[][] squares = new Square[8][8];
+    private Square[][] squares = new Square[Constants.BOARD_HEIGHT][Constants.BOARD_WIDTH];
     private Color playerTurn;
 
     public Board(){
         playerTurn = Color.WHITE;
-        for(int rank =0;rank<8; rank++){
-            for (int file = 0; file < 8; file++) {
+        for(int rank =0;rank<Constants.BOARD_HEIGHT; rank++){
+            for (int file = 0; file < Constants.BOARD_WIDTH; file++) {
                 squares[rank][file] = new Square(rank, file);
             }
         }
         initialisePieces();
     }
     public void initialisePieces(){
-        for(int i = 0; i< 8; i++){
+        for(int i = 0; i< Constants.BOARD_WIDTH; i++){
             squares[1][i].setPiece(new Pawn(this, squares[1][i], Color.WHITE));
             squares[6][i].setPiece(new Pawn(this, squares[1][i], Color.BLACK));
         }
@@ -39,6 +39,7 @@ public class Board {
         squares[7][5].setPiece(new Bishop(this, squares[0][5], Color.BLACK));
         squares[7][6].setPiece(new Knight(this, squares[0][6], Color.BLACK));
         squares[7][7].setPiece(new Rook(this, squares[0][7], Color.BLACK));
+        squares[5][1].setPiece(new Queen(this, squares[5][1], Color.BLACK));
 
     }
 
@@ -57,17 +58,17 @@ public class Board {
     public void move(Square squareFrom, Square squareTo){
         // TODO
     }
-    public Square getSquare(int file, int rank){
-        return this.squares[file][rank];
+    public Square getSquare(int rank, int file){
+        return this.squares[rank][file];
     }
 
     public void displayBoard(){
-        ArrayList<Square> legal = squares[0][3].getPiece().getAllLegalMoves();
+        ArrayList<Square> legal = squares[5][1].getPiece().getAllLegalMoves();
 //        ArrayList<Square> legal = new ArrayList<>();
-        for(int rank = 7; rank >=0 ; rank--){
+        for(int rank = Constants.BOARD_HEIGHT -1; rank >=0 ; rank--){
             System.out.println("------------------------------------");
             System.out.print(" " + rank + " |");
-            for(int file = 0; file<8; file++){
+            for(int file = 0; file<Constants.BOARD_WIDTH; file++){
                 if (squares[rank][file].getPiece() == null){
                     if(legal.contains(squares[rank][file])){
                         System.out.print(" x |");
@@ -87,7 +88,6 @@ public class Board {
         }
         System.out.println("-----a---b---c---d---e---f---g---h--");
     }
-
 
     public static void main(String[] args) {
         Board board = new Board();

@@ -24,7 +24,6 @@ public class Pawn extends Piece {
             return true;
         }
         if(vertical == 2 && horizontal == 0 && !hasMoved){
-
             return true;
         }
         if(horizontal == 1 && vertical == 1){

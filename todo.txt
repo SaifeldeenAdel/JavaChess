@@ -1,0 +1,18 @@
+- Pawn move validation
+    - Two squares
+    - One square
+    - En Passant
+    - PROMOTION
+
+- King validation
+    - isInCheck?
+    - checkMate?
+    - staleMate?
+
+- Rook Castling
+
+- move function in Board
+- loading from file
+- valid state?
+- PRINT STATEMENTS
+- EXCEPTIONS??

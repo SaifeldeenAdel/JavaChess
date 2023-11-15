@@ -22,29 +22,29 @@ public abstract class Piece {
         if(Square.outOfBounds(squareTo.rank, squareTo.file)){
             return false;
         }
-        // Makes sure the destination square is not null or doesn't have a piece that has the same color
+        // Makes sure the destination square doesn't have a piece at all or doesn't have a piece that has the same color
         if (squareTo.getPiece() != null){
             if ((squareTo.getPiece().isWhite() && this.isWhite()) || (!squareTo.getPiece().isWhite() && !this.isWhite())){
                 return false;
             }
-            if (squareTo.getPiece().isKing()){
-                return false;
-            }
+//            if (squareTo.getPiece().isKing()){
+//                return false;
+//            }
         }
         return true;
     }
 
     public ArrayList<Square> getAllLegalMoves() {
-        ArrayList<Square> possibleMoves = new ArrayList<>();
-        for(int i = 0; i<8;i++){
-            for (int j =0;j<8;j++){
-                if (this.isValidMove(this.getPosition(), this.getBoard().getSquare(j, i))){
-                    possibleMoves.add(this.getBoard().getSquare(j,i));
-                    System.out.println(j + " " + i);
+        ArrayList<Square> legalMoves = new ArrayList<>();
+        for(int rank = 0; rank<Constants.BOARD_HEIGHT;rank++){
+            for (int file =0;file<Constants.BOARD_WIDTH;file++){
+                if (this.isValidMove(this.getPosition(), this.getBoard().getSquare(rank, file))){
+                    legalMoves.add(this.getBoard().getSquare(rank,file));
+                    System.out.println(rank + " " + file);
                 }
             }
         }
-        return possibleMoves;
+        return legalMoves;
     }
 
     public boolean isWhite(){

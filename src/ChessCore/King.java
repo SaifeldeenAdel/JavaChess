@@ -11,7 +11,14 @@ public class King extends Piece {
         if (!super.isValidMove(squareFrom, squareTo)){
             return false;
         }
+
+
         return true;
     }
+//    public boolean isInCheck(){
+//        for(int rank = 0; rank<Constants.BOARD_HEIGHT; rank++){
+//            for(int )
+//        }
+//    }
 
 }
