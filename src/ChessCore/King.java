@@ -11,7 +11,16 @@ public class King extends Piece {
         if (!super.isValidMove(squareFrom, squareTo)){
             return false;
         }
-        return true;
+        int deltaX = Math.abs(squareTo.file - squareFrom.file);
+        int deltaY = Math.abs(squareTo.rank - squareFrom.rank);
+
+        // Check if the move is within the king's range (one square in any direction)
+        if ((deltaX <= 1 && deltaY <= 1) && (deltaX + deltaY > 0)) {
+            // Ensure the destination square is either empty or has an opponent's piece
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public boolean isInCheck(){

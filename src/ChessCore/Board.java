@@ -40,7 +40,7 @@ public class Board {
         squares[7][6].setPiece(new Knight(this, squares[0][6], Color.BLACK));
         squares[7][7].setPiece(new Rook(this, squares[0][7], Color.BLACK));
 
-        squares[5][1].setPiece(new King(this, squares[5][1], Color.BLACK));
+        squares[2][1].setPiece(new King(this, squares[2][1], Color.BLACK));
 //        squares[3][3].setPiece(new Queen(this, squares[3][3], Color.WHITE));
 
     }
@@ -59,14 +59,18 @@ public class Board {
 
     public void move(Square squareFrom, Square squareTo){
         // TODO
+        if (this.getAllValidMovesFromSquare(squareFrom).isEmpty()){
+            System.out.println("Invalid move");
+        } else ()
     }
 
     public Square getSquare(int rank, int file){
         return this.squares[rank][file];
     }
 
+
     public void displayBoard(){
-        ArrayList<Square> legal = squares[5][1].getPiece().getAllLegalMoves();
+        ArrayList<Square> legal = squares[2][1].getPiece().getAllLegalMoves();
 //        ArrayList<Square> legal = new ArrayList<>();
         for(int rank = Constants.BOARD_HEIGHT -1; rank >=0 ; rank--){
             System.out.println("------------------------------------");
