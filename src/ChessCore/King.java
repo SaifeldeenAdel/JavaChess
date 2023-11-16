@@ -11,17 +11,20 @@ public class King extends Piece {
         if (!super.isValidMove(squareFrom, squareTo)){
             return false;
         }
-
-
         return true;
     }
 
-//    public boolean isInCheck(){
-//        for(int rank = 0; rank<Constants.BOARD_HEIGHT; rank++){
-//            for(int file =0; file<Constants.BOARD_WIDTH; file++){
-//                if(this.getBoard().getSquare(rank, file) )
-//            }
-//        }
-//    }
-
+    public boolean isInCheck(){
+        for(int rank = 0; rank<Constants.BOARD_HEIGHT; rank++){
+            for(int file =0; file<Constants.BOARD_WIDTH; file++){
+                Piece piece = this.getBoard().getSquare(rank, file).getPiece();
+                if(piece != null){
+                    if(piece.getAllLegalMoves().contains(this.getPosition())){
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
 }
