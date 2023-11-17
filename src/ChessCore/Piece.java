@@ -27,9 +27,6 @@ public abstract class Piece {
             if ((squareTo.getPiece().isWhite() && this.isWhite()) || (!squareTo.getPiece().isWhite() && !this.isWhite())){
                 return false;
             }
-//            if (squareTo.getPiece().isKing()){
-//                return false;
-//            }
         }
         return true;
     }
@@ -40,11 +37,17 @@ public abstract class Piece {
             for (int file =0;file<Constants.BOARD_WIDTH;file++){
                 if (this.isValidMove(this.getPosition(), this.getBoard().getSquare(rank, file))){
                     legalMoves.add(this.getBoard().getSquare(rank,file));
-                    System.out.println(rank + " " + file);
+//                    System.out.println(rank + " " + file);
                 }
             }
         }
         return legalMoves;
+    }
+
+    public void printAllLegalMoves(){
+        for(Square move: this.getAllLegalMoves()){
+            System.out.println(move.rank + " " + move.file);
+        }
     }
 
     public boolean isWhite(){
@@ -61,6 +64,10 @@ public abstract class Piece {
 
     public void setPosition(Square square) {
         this.square = square;
+    }
+
+    public PieceType getType() {
+        return type;
     }
 
     public boolean isAvailable(){

@@ -4,10 +4,8 @@ import java.util.ArrayList;
 
 public class Board {
     private Square[][] squares = new Square[Constants.BOARD_HEIGHT][Constants.BOARD_WIDTH];
-    private Color playerTurn;
 
     public Board(){
-        playerTurn = Color.WHITE;
         for(int rank =0;rank<Constants.BOARD_HEIGHT; rank++){
             for (int file = 0; file < Constants.BOARD_WIDTH; file++) {
                 squares[rank][file] = new Square(rank, file);
@@ -31,47 +29,41 @@ public class Board {
         squares[0][7].setPiece(new Rook(this, squares[0][7], Color.WHITE));
 
         // Black Pieces
-        squares[7][0].setPiece(new Rook(this, squares[0][0], Color.BLACK));
-        squares[7][1].setPiece(new Knight(this, squares[0][1], Color.BLACK));
-        squares[7][2].setPiece(new Bishop(this, squares[0][2], Color.BLACK));
-        squares[7][3].setPiece(new Queen(this, squares[0][3], Color.BLACK));
-        squares[7][4].setPiece(new King(this, squares[0][4], Color.BLACK));
-        squares[7][5].setPiece(new Bishop(this, squares[0][5], Color.BLACK));
-        squares[7][6].setPiece(new Knight(this, squares[0][6], Color.BLACK));
-        squares[7][7].setPiece(new Rook(this, squares[0][7], Color.BLACK));
+        squares[7][0].setPiece(new Rook(this, squares[7][0], Color.BLACK));
+        squares[7][1].setPiece(new Knight(this, squares[7][1], Color.BLACK));
+        squares[7][2].setPiece(new Bishop(this, squares[7][2], Color.BLACK));
+        squares[7][3].setPiece(new Queen(this, squares[7][3], Color.BLACK));
+        squares[7][4].setPiece(new King(this, squares[7][4], Color.BLACK));
+        squares[7][5].setPiece(new Bishop(this, squares[7][5], Color.BLACK));
+        squares[7][6].setPiece(new Knight(this, squares[7][6], Color.BLACK));
+        squares[7][7].setPiece(new Rook(this, squares[7][7], Color.BLACK));
 
-        squares[2][1].setPiece(new King(this, squares[2][1], Color.BLACK));
+//        squares[3][2].setPiece(new Pawn(this, squares[3][2], Color.BLACK));
 //        squares[3][3].setPiece(new Queen(this, squares[3][3], Color.WHITE));
 
-    }
-
-//    public boolean isValidState(){
-//
-//    }
-
-    public ArrayList<Square> getAllValidMovesFromSquare(Square square){
-        ArrayList<Square> validMoves = new ArrayList<>();
-        if (square.getPiece().isWhite() && this.playerTurn == Color.WHITE || !square.getPiece().isWhite() && this.playerTurn == Color.BLACK){
-            validMoves = square.getPiece().getAllLegalMoves();
-        }
-        return validMoves;
-    }
-
-    public void move(Square squareFrom, Square squareTo){
-        // TODO
-        if (this.getAllValidMovesFromSquare(squareFrom).isEmpty()){
-            System.out.println("Invalid move");
-        } else ()
     }
 
     public Square getSquare(int rank, int file){
         return this.squares[rank][file];
     }
 
+    public void performMove(Square squareFrom, Square squareTo){
+        Piece movingPiece = squareFrom.getPiece();
+        squareFrom.removePiece();
+
+        Piece capturedPiece = squareTo.getPiece();
+        if (capturedPiece != null){
+            System.out.println("Captured " + capturedPiece.getType().name().charAt(0) +capturedPiece.getType().name().substring(1).toLowerCase());
+        }
+        squareTo.setPiece(movingPiece);
+        movingPiece.setPosition(squareTo);
+//        return true;
+    }
+
 
     public void displayBoard(){
-        ArrayList<Square> legal = squares[2][1].getPiece().getAllLegalMoves();
-//        ArrayList<Square> legal = new ArrayList<>();
+//        ArrayList<Square> legal = squares[2][1].getPiece().getAllLegalMoves();
+        ArrayList<Square> legal = new ArrayList<>();
         for(int rank = Constants.BOARD_HEIGHT -1; rank >=0 ; rank--){
             System.out.println("------------------------------------");
             System.out.print(" " + rank + " |");

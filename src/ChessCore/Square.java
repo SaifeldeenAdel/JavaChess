@@ -15,6 +15,10 @@ public class Square {
         this.piece = piece;
     }
 
+    public void removePiece(){
+        this.piece = null;
+    }
+
     public Piece getPiece() {
         return piece;
     }
