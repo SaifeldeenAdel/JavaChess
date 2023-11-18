@@ -92,7 +92,7 @@ public class ChessGame {
             }
 
         } catch (ArrayIndexOutOfBoundsException e){
-            System.out.println("Invalid Move");
+            System.out.println("Invalidddd Move");
         }
     }
 

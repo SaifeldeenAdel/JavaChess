@@ -1,6 +1,8 @@
 package ChessCore;
 
 import java.util.ArrayList;
+import org.javatuples.Pair;
+import java.util.List;
 
 public class Board implements Cloneable{
     private Square[][] squares = new Square[Constants.BOARD_HEIGHT][Constants.BOARD_WIDTH];
@@ -17,7 +19,7 @@ public class Board implements Cloneable{
     public void initialisePieces(){
         for(int i = 0; i< Constants.BOARD_WIDTH; i++){
             squares[1][i].setPiece(new Pawn(this, squares[1][i], Color.WHITE));
-            squares[6][i].setPiece(new Pawn(this, squares[1][i], Color.BLACK));
+            squares[6][i].setPiece(new Pawn(this, squares[6][i], Color.BLACK));
         }
         // White Pieces
         squares[0][0].setPiece(new Rook(this, squares[0][0], Color.WHITE));
@@ -39,8 +41,9 @@ public class Board implements Cloneable{
         squares[7][6].setPiece(new Knight(this, squares[7][6], Color.BLACK));
         squares[7][7].setPiece(new Rook(this, squares[7][7], Color.BLACK));
 
-//        squares[2][0].setPiece(new King(this, squares[2][0], Color.BLACK));
-//        squares[3][3].setPiece(new Queen(this, squares[3][3], Color.WHITE));
+//        squares[2][1].setPiece(new Pawn(this, squares[2][1], Color.WHITE));
+//    //        squares[2][4].setPiece(new Queen(this, squares[2][4], Color.BLACK));
+//        squares[2][3].setPiece(new Pawn(this, squares[2][3], Color.BLACK));
 
     }
 
@@ -66,15 +69,32 @@ public class Board implements Cloneable{
     public void performMove(Square squareFrom, Square squareTo){
 //        System.out.println(squareFrom.rank + " " + squareFrom.file);
         Piece movingPiece = squareFrom.getPiece();
-        squareFrom.removePiece();
-
         Piece capturedPiece = squareTo.getPiece();
+        squareFrom.removePiece();
+        squareTo.setPiece(movingPiece);
+        movingPiece.setPosition(squareTo);
+
         if (capturedPiece != null){
             System.out.println("Captured " + capturedPiece.getType().name().charAt(0) +capturedPiece.getType().name().substring(1).toLowerCase());
         }
-        squareTo.setPiece(movingPiece);
-        movingPiece.setPosition(squareTo);
+        if(movingPiece instanceof Pawn)
+        {
+            ((Pawn) movingPiece).setHasMoved();
+
+            //enpassantSquare  set to null
+
+
+        }else{
+        }
+        lastMove(squareFrom,squareTo);
 //        return true;
+    }
+
+    public List<Pair <Square, Square>> lastMove(Square squareFrom, Square squareTo)
+    {
+        List<Pair <Square, Square>> lastPieceMove = new ArrayList<>();
+        lastPieceMove.add(Pair.with(squareFrom,squareTo));
+        return lastPieceMove;
     }
 
     // Function that doesn't have any print statements to test the move in the cloned boards
@@ -88,7 +108,7 @@ public class Board implements Cloneable{
 
     public void displayBoard(){
 //        System.out.println(((King)squares[7][4].getPiece()).isInCheck());
-//        ArrayList<Square> legal = squares[2][1].getPiece().getAllLegalMoves();
+        //ArrayList<Square> legal = squares[6][4].getPiece().getAllLegalMoves();
         ArrayList<Square> legal = new ArrayList<>();
         for(int rank = Constants.BOARD_HEIGHT -1; rank >=0 ; rank--){
             System.out.println("------------------------------------");
