@@ -39,7 +39,7 @@ public class Board implements Cloneable{
         squares[7][6].setPiece(new Knight(this, squares[7][6], Color.BLACK));
         squares[7][7].setPiece(new Rook(this, squares[7][7], Color.BLACK));
 
-//        squares[3][2].setPiece(new Pawn(this, squares[3][2], Color.BLACK));
+//        squares[2][0].setPiece(new King(this, squares[2][0], Color.BLACK));
 //        squares[3][3].setPiece(new Queen(this, squares[3][3], Color.WHITE));
 
     }
@@ -64,6 +64,7 @@ public class Board implements Cloneable{
     }
 
     public void performMove(Square squareFrom, Square squareTo){
+//        System.out.println(squareFrom.rank + " " + squareFrom.file);
         Piece movingPiece = squareFrom.getPiece();
         squareFrom.removePiece();
 
@@ -76,8 +77,17 @@ public class Board implements Cloneable{
 //        return true;
     }
 
+    // Function that doesn't have any print statements to test the move in the cloned boards
+    public void testMove(Square squareFrom, Square squareTo){
+        Piece movingPiece = squareFrom.getPiece();
+        squareFrom.removePiece();
+        squareTo.setPiece(movingPiece);
+        movingPiece.setPosition(squareTo);
+    }
+
 
     public void displayBoard(){
+//        System.out.println(((King)squares[7][4].getPiece()).isInCheck());
 //        ArrayList<Square> legal = squares[2][1].getPiece().getAllLegalMoves();
         ArrayList<Square> legal = new ArrayList<>();
         for(int rank = Constants.BOARD_HEIGHT -1; rank >=0 ; rank--){
@@ -106,6 +116,8 @@ public class Board implements Cloneable{
 
     public static void main(String[] args) {
         Board board = new Board();
+        Board clone = board.clone();
+
         board.displayBoard();
     }
 }

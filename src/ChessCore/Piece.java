@@ -82,6 +82,10 @@ public abstract class Piece implements Cloneable{
         return type;
     }
 
+    public Color getColor() {
+        return color;
+    }
+
     public boolean isAvailable(){
         return available;
     }

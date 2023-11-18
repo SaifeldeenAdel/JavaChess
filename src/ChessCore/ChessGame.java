@@ -16,15 +16,62 @@ public class ChessGame {
         playerTurn = Color.WHITE;
     }
 
-    public ArrayList<Square> getAllValidMovesFromSquare(Square square){
+    public boolean isValidMove(Square squareFrom, Square squareTo){
+        Board clonedBoard = this.board.clone();
+        Square clonedSquareFrom = clonedBoard.getSquare(squareFrom.rank, squareFrom.file);
+        Square cloneSquareTo = clonedBoard.getSquare(squareTo.rank, squareTo.file);
+        clonedBoard.testMove(clonedSquareFrom, cloneSquareTo);
+//        System.out.println("checking move");
+        if (this.kingIsInCheck(clonedBoard)){
+            return false;
+        } else{
+            return true;
+        }
+    }
+
+    public ArrayList<Square> getAllValidMovesFromSquare(Square squareFrom){
         ArrayList<Square> validMoves = new ArrayList<>();
-        if (square.getPiece() == null){
+        if (squareFrom.getPiece() == null){
             return validMoves;
         }
-        if (square.getPiece().isWhite() && this.playerTurn == Color.WHITE || !square.getPiece().isWhite() && this.playerTurn == Color.BLACK){
-            validMoves = square.getPiece().getAllLegalMoves();
+
+        if (squareFrom.getPiece().isWhite() && this.playerTurn == Color.WHITE || !squareFrom.getPiece().isWhite() && this.playerTurn == Color.BLACK){
+            validMoves = squareFrom.getPiece().getAllLegalMoves();
+            int size = validMoves.size();
+            ArrayList<Square> removed = new ArrayList<>();
+
+            for (int i = 0; i < size; i++) {
+                if (!this.isValidMove(squareFrom, validMoves.get(i))) {
+                    removed.add(validMoves.get(i));
+                }
+            }
+            for (int i = 0; i < removed.size(); i++){
+                validMoves.remove(removed.get(i));
+            }
         }
         return validMoves;
+    }
+
+
+    public boolean kingIsInCheck(Board board){
+        for(int rank = 0; rank<Constants.BOARD_HEIGHT; rank++){
+            for(int file =0; file<Constants.BOARD_WIDTH; file++){
+                Piece piece = board.getSquare(rank, file).getPiece();
+                if(piece != null && piece instanceof King && piece.getColor() == this.playerTurn){
+//                    System.out.println("cheking check");
+                    if (((King) piece).isInCheck()){
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean isCheckMate(){
+        return true;
     }
 
     public void move(int fileFrom, int rankFrom, int fileTo, int rankTo){
@@ -39,6 +86,9 @@ public class ChessGame {
             } else {
                 board.performMove(squareFrom, squareTo);
                 switchTurns();
+                if (this.kingIsInCheck(board)){
+                    System.out.println(playerTurn + " is in check");;
+                };
             }
 
         } catch (ArrayIndexOutOfBoundsException e){
@@ -67,8 +117,8 @@ public class ChessGame {
                 int fileTo = (int)moves[1].charAt(0) - 97;
                 int rankTo = (int)moves[1].charAt(1) - 49;
 //                System.out.println(fileFrom + " " + rankFrom);
-                System.out.print("Move " + counter++ + " --> ");
                 this.move(fileFrom, rankFrom, fileTo, rankTo);
+//                System.out.print("Move " + counter++ + " --> ");
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -78,7 +128,7 @@ public class ChessGame {
     public static void main(String[] args) {
         ChessGame game = new ChessGame();
         game.playFromFile("ChessGame.txt");
-//        game.display();
+        game.display();
 //        game.move(1,0,2,2); // valid
 //        game.move(6,7,5,5); // valid
 //        game.move(2,2,4,3); // valid

@@ -31,9 +31,4 @@ public class Pawn extends Piece {
         }
         return false;
     }
-
-    @Override
-    public ArrayList<Square> getAllLegalMoves() {
-        return null;
-    }
 }
