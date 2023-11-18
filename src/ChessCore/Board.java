@@ -2,7 +2,7 @@ package ChessCore;
 
 import java.util.ArrayList;
 
-public class Board {
+public class Board implements Cloneable{
     private Square[][] squares = new Square[Constants.BOARD_HEIGHT][Constants.BOARD_WIDTH];
 
     public Board(){
@@ -13,6 +13,7 @@ public class Board {
         }
         initialisePieces();
     }
+
     public void initialisePieces(){
         for(int i = 0; i< Constants.BOARD_WIDTH; i++){
             squares[1][i].setPiece(new Pawn(this, squares[1][i], Color.WHITE));
@@ -41,6 +42,21 @@ public class Board {
 //        squares[3][2].setPiece(new Pawn(this, squares[3][2], Color.BLACK));
 //        squares[3][3].setPiece(new Queen(this, squares[3][3], Color.WHITE));
 
+    }
+
+    public Board clone(){
+        try{
+            Board clonedBoard = (Board)super.clone();
+            clonedBoard.squares = new Square[Constants.BOARD_HEIGHT][Constants.BOARD_WIDTH];
+            for(int rank = 0; rank<Constants.BOARD_HEIGHT; rank++){
+                for(int file = 0; file<Constants.BOARD_WIDTH; file++){
+                    clonedBoard.squares[rank][file] = this.squares[rank][file].clone(clonedBoard);
+                }
+            }
+            return clonedBoard;
+        } catch(CloneNotSupportedException e){
+            return null;
+        }
     }
 
     public Square getSquare(int rank, int file){

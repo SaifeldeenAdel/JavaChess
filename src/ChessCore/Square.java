@@ -1,6 +1,6 @@
 package ChessCore;
 
-public class Square {
+public class Square implements Cloneable{
     public int rank;
     public int file;
     public Piece piece;
@@ -9,6 +9,16 @@ public class Square {
         this.file = file;
         this.rank = rank;
         this.piece = null;
+    }
+
+    public Square clone(Board clonedBoard){
+        try{
+            Square clonedSquare = (Square)super.clone();
+            clonedSquare.piece = this.piece != null ? this.piece.clone(clonedBoard, clonedSquare): null;
+            return clonedSquare;
+        } catch (CloneNotSupportedException e){
+            return null;
+        }
     }
 
     public void setPiece(Piece piece) {

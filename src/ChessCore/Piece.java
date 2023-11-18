@@ -2,7 +2,7 @@ package ChessCore;
 
 import java.util.ArrayList;
 
-public abstract class Piece {
+public abstract class Piece implements Cloneable{
     private Board board;
     private Square square;
     private Color color;
@@ -15,6 +15,18 @@ public abstract class Piece {
         this.color = color;
         this.type = type;
         this.available = true;
+    }
+
+    public Piece clone(Board clonedBoard, Square clonedSquare){
+        try {
+            Piece clonedPiece = (Piece)super.clone();
+            clonedPiece.square = clonedSquare;
+            clonedPiece.board = clonedBoard;
+            return clonedPiece;
+
+        } catch (CloneNotSupportedException e){
+            return null;
+        }
     }
 
     // Function to be overridden by other pieces
