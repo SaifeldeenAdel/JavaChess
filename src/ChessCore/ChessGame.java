@@ -1,5 +1,9 @@
 package ChessCore;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -51,13 +55,35 @@ public class ChessGame {
         this.board.displayBoard();
     }
 
+    public void playFromFile(String filename){
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(filename));
+            String line;
+            int counter = 1;
+            while((line = reader.readLine()) != null){
+//                System.out.println(line);
+                String[] moves = line.split(",");
+                int fileFrom = (int)moves[0].charAt(0) - 97;
+                int rankFrom = (int)moves[0].charAt(1) - 49;
+                int fileTo = (int)moves[1].charAt(0) - 97;
+                int rankTo = (int)moves[1].charAt(1) - 49;
+//                System.out.println(fileFrom + " " + rankFrom);
+                System.out.print("Move " + counter++ + " --> ");
+                this.move(fileFrom, rankFrom, fileTo, rankTo);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static void main(String[] args) {
         ChessGame game = new ChessGame();
-        game.display();
-        game.move(1,0,2,2); // valid
-        game.move(6,7,5,5); // valid
-        game.move(2,2,4,3); // valid
-        game.move(5,5,4,3); // valid , Capture
-        game.display();
+        game.playFromFile("ChessGame.txt");
+//        game.display();
+//        game.move(1,0,2,2); // valid
+//        game.move(6,7,5,5); // valid
+//        game.move(2,2,4,3); // valid
+//        game.move(5,5,4,3); // valid , Capture
+//        game.display();
     }
 }
