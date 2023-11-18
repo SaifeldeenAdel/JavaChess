@@ -54,10 +54,11 @@ public class ChessGame {
     public static void main(String[] args) {
         ChessGame game = new ChessGame();
         game.display();
-        game.move(1,0,2,2); // valid
-        game.move(6,7,5,5); // valid
-        game.move(2,2,4,3); // valid
-        game.move(5,5,4,3); // valid , Capture
+        //game.move(3,1,3,2); // testing movement
+        //game.move(1,1,1,3); // valid
+        /*game.move(2,2,4,3); // valid
+         game.move(5,5,4,3); // valid , Capture
+        */
         game.display();
     }
 }

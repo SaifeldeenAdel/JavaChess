@@ -1,6 +1,8 @@
 package ChessCore;
 
 import java.util.ArrayList;
+import org.javatuples.Pair;
+import java.util.List;
 
 public class Board {
     private Square[][] squares = new Square[Constants.BOARD_HEIGHT][Constants.BOARD_WIDTH];
@@ -38,8 +40,9 @@ public class Board {
         squares[7][6].setPiece(new Knight(this, squares[7][6], Color.BLACK));
         squares[7][7].setPiece(new Rook(this, squares[7][7], Color.BLACK));
 
-//        squares[3][2].setPiece(new Pawn(this, squares[3][2], Color.BLACK));
-//        squares[3][3].setPiece(new Queen(this, squares[3][3], Color.WHITE));
+          squares[2][1].setPiece(new Pawn(this, squares[2][1], Color.WHITE));
+//        squares[2][4].setPiece(new Queen(this, squares[2][4], Color.BLACK));
+          squares[2][3].setPiece(new Pawn(this, squares[2][3], Color.BLACK));
 
     }
 
@@ -57,13 +60,20 @@ public class Board {
         }
         squareTo.setPiece(movingPiece);
         movingPiece.setPosition(squareTo);
+        lastMove(squareFrom,squareTo);
 //        return true;
     }
 
+    public List<Pair <Square, Square>> lastMove(Square squareFrom, Square squareTo)
+    {
+        List<Pair <Square, Square>> lastPieceMove = new ArrayList<>();
+        lastPieceMove.add(Pair.with(squareFrom,squareTo));
+        return lastPieceMove;
+    }
 
     public void displayBoard(){
-//        ArrayList<Square> legal = squares[2][1].getPiece().getAllLegalMoves();
-        ArrayList<Square> legal = new ArrayList<>();
+        ArrayList<Square> legal = squares[1][2].getPiece().getAllLegalMoves();
+       // ArrayList<Square> legal = new ArrayList<>();
         for(int rank = Constants.BOARD_HEIGHT -1; rank >=0 ; rank--){
             System.out.println("------------------------------------");
             System.out.print(" " + rank + " |");
