@@ -11,4 +11,16 @@ public enum PieceType {
         return this.value;
     }
 
+    public static PieceType getType(char symbol){
+        if (symbol == 'P'){
+            return PAWN;
+        } else if (symbol == 'K'){
+            return KNIGHT;
+        } else if (symbol == 'R'){
+            return ROOK;
+        } else if (symbol == 'Q'){
+            return QUEEN;
+        }
+        return null;
+    }
 }

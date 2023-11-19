@@ -74,7 +74,7 @@ public class ChessGame {
         return true;
     }
 
-    public void move(int fileFrom, int rankFrom, int fileTo, int rankTo){
+    public void move(int fileFrom, int rankFrom, int fileTo, int rankTo, PieceType toPromote){
         Square squareFrom;
         Square squareTo;
         try{
@@ -116,9 +116,11 @@ public class ChessGame {
                 int rankFrom = (int)moves[0].charAt(1) - 49;
                 int fileTo = (int)moves[1].charAt(0) - 97;
                 int rankTo = (int)moves[1].charAt(1) - 49;
-//                System.out.println(fileFrom + " " + rankFrom);
-                this.move(fileFrom, rankFrom, fileTo, rankTo);
-//                System.out.print("Move " + counter++ + " --> ");
+                if (moves.length == 2){
+                    this.move(fileFrom, rankFrom, fileTo, rankTo, null);
+                } else if (moves.length == 3) {
+                    this.move(fileFrom, rankFrom, fileTo, rankTo, PieceType.getType(moves[2].charAt(0)));
+                }
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
