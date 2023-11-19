@@ -108,7 +108,7 @@ public class Board implements Cloneable{
 
     public void displayBoard(){
 //        System.out.println(((King)squares[7][4].getPiece()).isInCheck());
-        //ArrayList<Square> legal = squares[6][4].getPiece().getAllLegalMoves();
+//        ArrayList<Square> legal = squares[6][3].getPiece().getAllLegalMoves();
         ArrayList<Square> legal = new ArrayList<>();
         for(int rank = Constants.BOARD_HEIGHT -1; rank >=0 ; rank--){
             System.out.println("------------------------------------");
