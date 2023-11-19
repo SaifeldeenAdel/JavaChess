@@ -81,6 +81,10 @@ public class ChessGame {
         return true;
     }
 
+    public boolean isStaleMate(Board board){
+        return true;
+    }
+
     public void move(int fileFrom, int rankFrom, int fileTo, int rankTo, PieceType toPromote){
         Square squareFrom;
         Square squareTo;
@@ -90,8 +94,10 @@ public class ChessGame {
             // Checks if there any valid moves from the current square or if the destination square is not in the valid moves
             if (this.getAllValidMovesFromSquare(squareFrom).isEmpty() || !this.getAllValidMovesFromSquare(squareFrom).contains(squareTo)){
                 System.out.println("Invalid move");
-            } else {
-                board.performMove(squareFrom, squareTo);
+            } else if ((rankTo == 7  || rankTo == 0) && squareFrom.getPiece() instanceof Pawn && toPromote == null){
+                System.out.println("Invalid move");
+            }else {
+                board.performMove(squareFrom, squareTo, toPromote);
                 switchTurns();
                 if (this.kingIsInCheck(board)){
                     if (this.isCheckMate(board)) {
@@ -100,10 +106,11 @@ public class ChessGame {
                         System.out.println(playerTurn + " is in check");;
                     }
                 };
+
             }
 
         } catch (ArrayIndexOutOfBoundsException e){
-            System.out.println("Invalid Move");
+            System.out.println("Invalid move");
         }
     }
 
@@ -127,6 +134,7 @@ public class ChessGame {
                 int rankFrom = (int)moves[0].charAt(1) - 49;
                 int fileTo = (int)moves[1].charAt(0) - 97;
                 int rankTo = (int)moves[1].charAt(1) - 49;
+
                 if (moves.length == 2){
                     this.move(fileFrom, rankFrom, fileTo, rankTo, null);
                 } else if (moves.length == 3) {

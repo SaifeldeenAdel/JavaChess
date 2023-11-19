@@ -66,7 +66,7 @@ public class Board implements Cloneable{
         return this.squares[rank][file];
     }
 
-    public void performMove(Square squareFrom, Square squareTo){
+    public void performMove(Square squareFrom, Square squareTo, PieceType toPromote){
 //        System.out.println(squareFrom.rank + " " + squareFrom.file);
         Piece movingPiece = squareFrom.getPiece();
         Piece capturedPiece = squareTo.getPiece();
@@ -80,9 +80,10 @@ public class Board implements Cloneable{
         if(movingPiece instanceof Pawn)
         {
             ((Pawn) movingPiece).setHasMoved();
-
+            if (toPromote != null){
+                ((Pawn)movingPiece).promoteTo(toPromote);
+            }
             //enpassantSquare  set to null
-
 
         }else{
         }
