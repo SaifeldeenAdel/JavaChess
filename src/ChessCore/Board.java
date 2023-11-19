@@ -17,29 +17,29 @@ public class Board implements Cloneable{
     }
 
     public void initialisePieces(){
-        for(int i = 0; i< Constants.BOARD_WIDTH; i++){
-            squares[1][i].setPiece(new Pawn(this, squares[1][i], Color.WHITE));
-            squares[6][i].setPiece(new Pawn(this, squares[6][i], Color.BLACK));
-        }
+//        for(int i = 0; i< Constants.BOARD_WIDTH; i++){
+//            squares[1][i].setPiece(new Pawn(this, squares[1][i], Color.WHITE));
+//            squares[6][i].setPiece(new Pawn(this, squares[6][i], Color.BLACK));
+//        }
         // White Pieces
-        squares[0][0].setPiece(new Rook(this, squares[0][0], Color.WHITE));
-        squares[0][1].setPiece(new Knight(this, squares[0][1], Color.WHITE));
-        squares[0][2].setPiece(new Bishop(this, squares[0][2], Color.WHITE));
-        squares[0][3].setPiece(new Queen(this, squares[0][3], Color.WHITE));
+//        squares[0][0].setPiece(new Rook(this, squares[0][0], Color.WHITE));
+//        squares[0][1].setPiece(new Knight(this, squares[0][1], Color.WHITE));
+//        squares[0][2].setPiece(new Bishop(this, squares[0][2], Color.WHITE));
+//        squares[0][3].setPiece(new Queen(this, squares[0][3], Color.WHITE));
         squares[0][4].setPiece(new King(this, squares[0][4], Color.WHITE));
-        squares[0][5].setPiece(new Bishop(this, squares[0][5], Color.WHITE));
+//        squares[0][5].setPiece(new Bishop(this, squares[0][5], Color.WHITE));
         squares[0][6].setPiece(new Knight(this, squares[0][6], Color.WHITE));
-        squares[0][7].setPiece(new Rook(this, squares[0][7], Color.WHITE));
+//        squares[0][7].setPiece(new Rook(this, squares[0][7], Color.WHITE));
 
         // Black Pieces
-        squares[7][0].setPiece(new Rook(this, squares[7][0], Color.BLACK));
+//        squares[7][0].setPiece(new Rook(this, squares[7][0], Color.BLACK));
         squares[7][1].setPiece(new Knight(this, squares[7][1], Color.BLACK));
-        squares[7][2].setPiece(new Bishop(this, squares[7][2], Color.BLACK));
-        squares[7][3].setPiece(new Queen(this, squares[7][3], Color.BLACK));
+//        squares[7][2].setPiece(new Bishop(this, squares[7][2], Color.BLACK));
+//        squares[7][3].setPiece(new Queen(this, squares[7][3], Color.BLACK));
         squares[7][4].setPiece(new King(this, squares[7][4], Color.BLACK));
-        squares[7][5].setPiece(new Bishop(this, squares[7][5], Color.BLACK));
-        squares[7][6].setPiece(new Knight(this, squares[7][6], Color.BLACK));
-        squares[7][7].setPiece(new Rook(this, squares[7][7], Color.BLACK));
+//        squares[7][5].setPiece(new Bishop(this, squares[7][5], Color.BLACK));
+//        squares[7][6].setPiece(new Knight(this, squares[7][6], Color.BLACK));
+//        squares[7][7].setPiece(new Rook(this, squares[7][7], Color.BLACK));
 
 //        squares[2][1].setPiece(new Pawn(this, squares[2][1], Color.WHITE));
 //    //        squares[2][4].setPiece(new Queen(this, squares[2][4], Color.BLACK));
@@ -48,6 +48,7 @@ public class Board implements Cloneable{
     }
 
     public Board clone(){
+        // creates a clone of the board and all the squares inside it
         try{
             Board clonedBoard = (Board)super.clone();
             clonedBoard.squares = new Square[Constants.BOARD_HEIGHT][Constants.BOARD_WIDTH];
@@ -66,8 +67,8 @@ public class Board implements Cloneable{
         return this.squares[rank][file];
     }
 
+    // Performing the given move on the board and printing appropriate message
     public void performMove(Square squareFrom, Square squareTo, PieceType toPromote){
-//        System.out.println(squareFrom.rank + " " + squareFrom.file);
         Piece movingPiece = squareFrom.getPiece();
         Piece capturedPiece = squareTo.getPiece();
         squareFrom.removePiece();
@@ -91,6 +92,7 @@ public class Board implements Cloneable{
 //        return true;
     }
 
+    // Getting the last move
     public List<Pair <Square, Square>> lastMove(Square squareFrom, Square squareTo)
     {
         List<Pair <Square, Square>> lastPieceMove = new ArrayList<>();

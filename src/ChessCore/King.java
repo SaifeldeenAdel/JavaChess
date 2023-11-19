@@ -25,6 +25,7 @@ public class King extends Piece {
     }
 
     public boolean isInCheck(){
+        // Checks if any piece has the king in its legal moves
         for(int rank = 0; rank<Constants.BOARD_HEIGHT; rank++){
             for(int file =0; file<Constants.BOARD_WIDTH; file++){
                 Piece piece = this.getBoard().getSquare(rank, file).getPiece();

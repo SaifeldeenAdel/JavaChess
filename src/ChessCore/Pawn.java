@@ -69,6 +69,10 @@ public class Pawn extends Piece {
     public void setHasMoved () {
             this.hasMoved = true;
     }
+
+    public void promoteTo(PieceType toPromote){
+        return;
+    }
     //enpassantSquare getter method
 //    public boolean enpassantValid (Square squareFrom, Square squareTo){
 //        Piece p1 = this.getBoard().getSquare(squareFrom.rank, squareFrom.file + 1).getPiece();
