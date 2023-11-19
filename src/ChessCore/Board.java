@@ -80,11 +80,11 @@ public class Board implements Cloneable{
         if(movingPiece instanceof Pawn)
         {
             ((Pawn) movingPiece).setHasMoved();
-
+            if(((Pawn) movingPiece).getEnpassantSquare()!=null)
+                ((Pawn) movingPiece).getEnpassantSquare().removePiece();
             //enpassantSquare  set to null
-
-
-        }else{
+        }
+        else{
         }
         lastMove(squareFrom,squareTo);
 //        return true;
