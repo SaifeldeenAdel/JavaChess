@@ -53,13 +53,13 @@ public class ChessGame {
     }
 
 
-    public boolean kingIsInCheck(Board board){
-        for(int rank = 0; rank<Constants.BOARD_HEIGHT; rank++){
-            for(int file =0; file<Constants.BOARD_WIDTH; file++){
+    public boolean kingIsInCheck(Board board) {
+        for (int rank = 0; rank < Constants.BOARD_HEIGHT; rank++) {
+            for (int file = 0; file < Constants.BOARD_WIDTH; file++) {
                 Piece piece = board.getSquare(rank, file).getPiece();
-                if(piece != null && piece instanceof King && piece.getColor() == this.playerTurn){
+                if (piece != null && piece instanceof King && piece.getColor() == this.playerTurn) {
 //                    System.out.println("cheking check");
-                    if (((King) piece).isInCheck()){
+                    if (((King) piece).isInCheck()) {
                         return true;
                     } else {
                         return false;
@@ -70,7 +70,14 @@ public class ChessGame {
         return false;
     }
 
-    public boolean isCheckMate(){
+    public boolean isCheckMate(Board board){
+        for (int rank = 0; rank < Constants.BOARD_HEIGHT; rank++) {
+            for (int file = 0; file < Constants.BOARD_WIDTH; file++) {
+                if (!getAllValidMovesFromSquare(board.getSquare(rank, file)).isEmpty()){
+                    return false;
+                }
+            }
+        }
         return true;
     }
 
@@ -87,12 +94,16 @@ public class ChessGame {
                 board.performMove(squareFrom, squareTo);
                 switchTurns();
                 if (this.kingIsInCheck(board)){
-                    System.out.println(playerTurn + " is in check");;
+                    if (this.isCheckMate(board)) {
+                        System.out.println((playerTurn == Color.WHITE ? Color.BLACK : Color.WHITE) + " won");
+                    } else {
+                        System.out.println(playerTurn + " is in check");;
+                    }
                 };
             }
 
         } catch (ArrayIndexOutOfBoundsException e){
-            System.out.println("Invalidddd Move");
+            System.out.println("Invalid Move");
         }
     }
 

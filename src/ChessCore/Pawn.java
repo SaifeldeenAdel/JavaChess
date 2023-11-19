@@ -19,29 +19,27 @@ public class Pawn extends Piece {
             return false;
         }
         int horizontal = Math.abs(squareFrom.file - squareTo.file);
-        int vertical = this.isWhite() ? squareTo.rank - squareFrom.rank : squareFrom.rank - squareTo.rank;
+        int vertical = squareTo.rank - squareFrom.rank;
 
 
-        if (vertical == 2 && horizontal == 0 && !hasMoved && squareTo.getPiece() == null) {
+        if (vertical == 2 && horizontal == 0 && !hasMoved && squareTo.getPiece() == null && this.isWhite()) {
+            this.justMovedTwoSquares = true;
+            return true;
+        }
+        if (vertical == 1 && horizontal == 0 && squareTo.getPiece() == null && this.isWhite()) {
+
+            return true;
+        }
+        if (vertical == -2 && horizontal == 0 && !hasMoved && squareTo.getPiece() == null && !this.isWhite()) {
 
             this.justMovedTwoSquares = true;
 
             return true;
         }
-        if (vertical == 1 && horizontal == 0 && squareTo.getPiece() == null) {
-
+        if (vertical == -1 && horizontal == 0 && squareTo.getPiece() == null && !this.isWhite()) {
             return true;
         }
-        if (vertical == -2 && horizontal == 0 && !hasMoved && squareTo.getPiece() == null) {
-
-            this.justMovedTwoSquares = true;
-
-            return true;
-        }
-        if (vertical == -1 && horizontal == 0 && squareTo.getPiece() == null) {
-            return true;
-        }
-        if (vertical == -1 && horizontal == 1) {
+        if (vertical == -1 && horizontal == 1 && !this.isWhite()) {
             if (squareTo.getPiece() != null) {
                 return true;}
 
@@ -54,7 +52,7 @@ public class Pawn extends Piece {
 //            }
             return false;
         }
-        if (horizontal == 1 && vertical == 1) {
+        if (horizontal == 1 && vertical == 1 && this.isWhite()) {
             if (squareTo.getPiece() != null) {
                 return true;}
 //            else {  //if enpassant ? -> return true;
