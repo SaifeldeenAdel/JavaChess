@@ -46,18 +46,18 @@ public class Pawn extends Piece {
 
              else {//if enpassant ? -> return true;
                 if (enpassantValid(squareFrom, squareTo)) {
-                   // System.out.println("enpassant working");
+                    System.out.println("enpassant working");
                     if(squareTo.file - squareFrom.file==1)
                     {
                         Piece pRight = this.getBoard().getSquare(squareFrom.rank, squareFrom.file + 1).getPiece();
                         enpassantSquare.setPiece(pRight);
-                        //System.out.println("enpassant working");
+                        System.out.println("right working");
                         return true;
                     }
                     else{
                         Piece pLeft = this.getBoard().getSquare(squareFrom.rank, squareFrom.file - 1).getPiece();
                         enpassantSquare.setPiece(pLeft);
-                        //System.out.println("enpassant working");
+                        System.out.println("left working");
                         return true;
                     }
 
@@ -70,18 +70,19 @@ public class Pawn extends Piece {
                 return true;}
             else {  //if enpassant ? -> return true;
                 if (enpassantValid(squareFrom, squareTo)) {
+                    System.out.println("enpassant working");
                     //check horizontal difference without absolute if negative, instance variable empassantSquare stores pos file -1
                     if(squareTo.file - squareFrom.file==1)
                     {
                         Piece pRight = this.getBoard().getSquare(squareFrom.rank, squareFrom.file + 1).getPiece();
                         enpassantSquare.setPiece(pRight);
-                        //System.out.println("enpassant working");
+                        System.out.println("right working");
                         return true;
                     }
                     else{
                         Piece pLeft = this.getBoard().getSquare(squareFrom.rank, squareFrom.file - 1).getPiece();
                         enpassantSquare.setPiece(pLeft);
-                        //System.out.println("enpassant working");
+                        System.out.println("left working");
                         return true;
                     }
                 }
@@ -100,6 +101,7 @@ public class Pawn extends Piece {
     public boolean enpassantValid (Square squareFrom, Square squareTo){
         if(!Square.outOfBounds(squareFrom.rank, squareFrom.file+1))
         {
+            //System.out.println("enpassant method");
             Piece p1 = this.getBoard().getSquare(squareFrom.rank, squareFrom.file + 1).getPiece();
             if(p1!=null)
             {
