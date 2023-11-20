@@ -6,6 +6,8 @@ import java.util.List;
 
 public class Board implements Cloneable{
     private Square[][] squares = new Square[Constants.BOARD_HEIGHT][Constants.BOARD_WIDTH];
+    private ArrayList<Square> lastMove = null;
+    private Square enpassantSquare;
 
     public Board(){
         for(int rank =0;rank<Constants.BOARD_HEIGHT; rank++){
@@ -14,7 +16,6 @@ public class Board implements Cloneable{
             }
         }
         initialisePieces();
-        lastMove(null,null);
     }
 
     public void initialisePieces(){
@@ -42,7 +43,7 @@ public class Board implements Cloneable{
         squares[7][6].setPiece(new Knight(this, squares[7][6], Color.BLACK));
         squares[7][7].setPiece(new Rook(this, squares[7][7], Color.BLACK));
 
-//        squares[2][1].setPiece(new Pawn(this, squares[2][1], Color.WHITE));
+//        squares[5][3].setPiece(new Pawn(this, squares[5][3], Color.WHITE));
 //    //        squares[2][4].setPiece(new Queen(this, squares[2][4], Color.BLACK));
 //        squares[2][3].setPiece(new Pawn(this, squares[2][3], Color.BLACK));
 
@@ -73,8 +74,6 @@ public class Board implements Cloneable{
         Piece movingPiece = squareFrom.getPiece();
         Piece capturedPiece = squareTo.getPiece();
 
-        // Setting their hasMoved variable to stop special moves later
-
         // Checking if it's a castling move
         if (movingPiece instanceof King && ((isShortCastleMove(squareFrom, squareTo) || (isLongCastleMove(squareFrom, squareTo))))) {
             int rank = movingPiece.isWhite() ? 0 : 7;
@@ -101,6 +100,17 @@ public class Board implements Cloneable{
 
                 if (isFinal) System.out.println("Castle");
             }
+            // Checking if pawn is to be promoted
+        }  else if(movingPiece instanceof Pawn && ((Pawn)movingPiece).enpassantValid(squareFrom, squareTo)) {
+            squareFrom.removePiece();
+            squareTo.setPiece(movingPiece);
+            enpassantSquare.removePiece();
+            if (isFinal) System.out.println("Enpassant") ;
+
+        }  else if (movingPiece instanceof Pawn) {
+            if (toPromote != null) {
+                ((Pawn) movingPiece).promoteTo(squareTo,toPromote);
+            }
         }
         else {
             // Normal movement
@@ -113,28 +123,17 @@ public class Board implements Cloneable{
             }
         }
 
-
-        // Checking if pawn is to be promoted
-        if (movingPiece instanceof Pawn) {
-            if (toPromote != null) {
-                ((Pawn) movingPiece).promoteTo(squareTo,toPromote);
+        // Setting their hasMoved variable to stop special moves later
+        if(isFinal){
+            setLastMove(squareFrom,squareTo);
+            if(movingPiece instanceof Pawn){
+                ((Pawn)movingPiece).setHasMoved();
+            } else if (movingPiece instanceof King){
+                ((King) movingPiece).setHasMoved();
+            } else if (movingPiece instanceof Rook){
+                ((Rook) movingPiece).setHasMoved();
             }
-
         }
-
-            if (isFinal) {
-                if (movingPiece instanceof Pawn) {
-                    ((Pawn) movingPiece).setHasMoved();
-                } else if (movingPiece instanceof King) {
-                    ((King) movingPiece).setHasMoved();
-                } else if (movingPiece instanceof Rook) {
-                    ((Rook) movingPiece).setHasMoved();
-                }
-            }
-
-            lastMove(squareFrom, squareTo);
-//        return true;
-
     }
 
     public boolean isShortCastleMove(Square squareFrom, Square squareTo){
@@ -145,16 +144,36 @@ public class Board implements Cloneable{
         return squareFrom.file - squareTo.file > 1;
     }
 
-    // Getting the last move
+//    // Getting the last move
+//    public List<Pair <Square, Square>> lastMove(Square squareFrom, Square squareTo)
+//    {
+//
+//        List<Pair <Square, Square>> lastPieceMove = new ArrayList<>();
+//        lastPieceMove.add(Pair.with(squareFrom,squareTo));
+//        return lastPieceMove;
+//    }
 
-    public Pair <Square,Square> lastMove(Square squareFrom, Square squareTo)
-    {
-        return  new Pair<>(squareFrom,squareTo);
+    public void setLastMove(Square squareFrom, Square squareTo) {
+        this.lastMove = new ArrayList<>();
+        this.lastMove.add(squareFrom);
+        this.lastMove.add(squareTo);
+    }
+
+    public ArrayList<Square> getLastMove() {
+        return lastMove;
+    }
+
+    public void setEnpassantSquare(Square enpassantSquare) {
+        this.enpassantSquare = enpassantSquare;
+    }
+
+    public Square getEnpassantSquare() {
+        return enpassantSquare;
     }
 
     public void displayBoard(){
 //        squares[0][4].getPiece().printAllLegalMoves();
-//        ArrayList<Square> legal = squares[7][4].getPiece().getAllLegalMoves();
+//        ArrayList<Square> legal = squares[6][4].getPiece().getAllLegalMoves();
         ArrayList<Square> legal = new ArrayList<>();
 
         for(int rank = Constants.BOARD_HEIGHT -1; rank >=0 ; rank--){
