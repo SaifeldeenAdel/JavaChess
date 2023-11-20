@@ -70,48 +70,49 @@ public class Board implements Cloneable{
     }
 
     // Performing the given move on the board and printing appropriate message
-    public void performMove(Square squareFrom, Square squareTo, PieceType toPromote, boolean isFinal) {
+    // Performing the given move on the board and printing appropriate message
+    public void performMove(Square squareFrom, Square squareTo, PieceType toPromote, boolean isFinal){
         Piece movingPiece = squareFrom.getPiece();
         Piece capturedPiece = squareTo.getPiece();
 
         // Checking if it's a castling move
-        if (movingPiece instanceof King && ((isShortCastleMove(squareFrom, squareTo) || (isLongCastleMove(squareFrom, squareTo))))) {
+        if (movingPiece instanceof King && ((isShortCastleMove(squareFrom, squareTo) || (isLongCastleMove(squareFrom, squareTo))))){
             int rank = movingPiece.isWhite() ? 0 : 7;
-            if (isShortCastleMove(squareFrom, squareTo) && ((King) movingPiece).canShortCastle()) {
+            if(isShortCastleMove(squareFrom, squareTo) && ((King)movingPiece).canShortCastle()){
                 squareFrom.removePiece();
-                getSquare(rank, 6).setPiece(movingPiece);
-                movingPiece.setPosition(getSquare(0, 6)); // setting the king
+                getSquare(rank,6).setPiece(movingPiece);
+                movingPiece.setPosition(getSquare(0,6)); // setting the king
 
-                Piece rook = getSquare(rank, 7).getPiece();
-                getSquare(rank, 7).removePiece();
-                getSquare(rank, 5).setPiece(rook);
-                rook.setPosition(getSquare(rank, 5)); // setting the rook
+                Piece rook = getSquare(rank,7).getPiece();
+                getSquare(rank,7).removePiece();
+                getSquare(rank,5).setPiece(rook);
+                rook.setPosition(getSquare(rank,5)); // setting the rook
 
-                if (isFinal) System.out.println("Castle");
-            } else if (isLongCastleMove(squareFrom, squareTo) && ((King) movingPiece).canLongCastle()) {
+                if (isFinal) System.out.println("Castle") ;
+            } else if (isLongCastleMove(squareFrom, squareTo) && ((King)movingPiece).canLongCastle()){
                 squareFrom.removePiece();
-                getSquare(rank, 2).setPiece(movingPiece);
-                movingPiece.setPosition(getSquare(rank, 2)); // setting the king
+                getSquare(rank,2).setPiece(movingPiece);
+                movingPiece.setPosition(getSquare(rank,2)); // setting the king
 
-                Piece rook = getSquare(rank, 0).getPiece();
-                getSquare(rank, 0).removePiece();
-                getSquare(rank, 3).setPiece(rook);
-                rook.setPosition(getSquare(rank, 3)); // setting the rook
+                Piece rook = getSquare(rank,0).getPiece();
+                getSquare(rank,0).removePiece();
+                getSquare(rank,3).setPiece(rook);
+                rook.setPosition(getSquare(rank,3)); // setting the rook
 
-                if (isFinal) System.out.println("Castle");
+                if (isFinal) System.out.println("Castle") ;
             }
-            // Checking if pawn is to be promoted
         }  else if(movingPiece instanceof Pawn && ((Pawn)movingPiece).enpassantValid(squareFrom, squareTo)) {
             squareFrom.removePiece();
             squareTo.setPiece(movingPiece);
             enpassantSquare.removePiece();
             if (isFinal) System.out.println("Enpassant") ;
 
-        }  else if (movingPiece instanceof Pawn) {
-            if (toPromote != null) {
-                ((Pawn) movingPiece).promoteTo(squareTo,toPromote);
-            }
         }
+//        else if (movingPiece instanceof Pawn) {
+//            if (toPromote != null) {
+//                ((Pawn) movingPiece).promoteTo(squareTo,toPromote);
+//            }
+//        }
         else {
             // Normal movement
             squareFrom.removePiece();
