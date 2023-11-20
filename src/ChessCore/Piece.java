@@ -36,12 +36,18 @@ public abstract class Piece implements Cloneable{
         }
         // Makes sure the destination square doesn't have a piece at all or doesn't have a piece that has the same color
         if (squareTo.getPiece() != null){
-            if ((squareTo.getPiece().isWhite() && this.isWhite()) || (!squareTo.getPiece().isWhite() && !this.isWhite())){
+            Piece piece = squareTo.getPiece();
+            if (this instanceof King && piece instanceof Rook && (((King)this).canShortCastle() || ((King)this).canLongCastle())){
+                return true;
+            }
+            if ((piece.isWhite() && this.isWhite()) || (!piece.isWhite() && !this.isWhite())){
                 return false;
             }
         }
         return true;
     }
+
+
 
     public ArrayList<Square> getAllLegalMoves() {
         ArrayList<Square> legalMoves = new ArrayList<>();

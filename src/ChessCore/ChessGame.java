@@ -10,18 +10,19 @@ public class ChessGame {
     private Board board;
     private Map<Square, Square> squares;
     private Color playerTurn;
+    private boolean gameEnded;
 
     public ChessGame(){
         board = new Board();
         playerTurn = Color.WHITE;
+        gameEnded = false;
     }
 
     public boolean isValidMove(Square squareFrom, Square squareTo){
         Board clonedBoard = this.board.clone();
         Square clonedSquareFrom = clonedBoard.getSquare(squareFrom.rank, squareFrom.file);
         Square cloneSquareTo = clonedBoard.getSquare(squareTo.rank, squareTo.file);
-        clonedBoard.testMove(clonedSquareFrom, cloneSquareTo);
-//        System.out.println("checking move");
+        clonedBoard.performMove(clonedSquareFrom, cloneSquareTo, PieceType.QUEEN, false);
         if (this.kingIsInCheck(clonedBoard)){
             return false;
         } else{
@@ -52,13 +53,12 @@ public class ChessGame {
         return validMoves;
     }
 
-
+    // Goes through all squares and finds the king and checks if its in check. If so, return true;
     public boolean kingIsInCheck(Board board) {
         for (int rank = 0; rank < Constants.BOARD_HEIGHT; rank++) {
             for (int file = 0; file < Constants.BOARD_WIDTH; file++) {
                 Piece piece = board.getSquare(rank, file).getPiece();
                 if (piece != null && piece instanceof King && piece.getColor() == this.playerTurn) {
-//                    System.out.println("cheking check");
                     if (((King) piece).isInCheck()) {
                         return true;
                     } else {
@@ -70,6 +70,7 @@ public class ChessGame {
         return false;
     }
 
+    // Goes through all pieces and makes sure there are no valid moves from any square
     public boolean isCheckMate(Board board){
         for (int rank = 0; rank < Constants.BOARD_HEIGHT; rank++) {
             for (int file = 0; file < Constants.BOARD_WIDTH; file++) {
@@ -81,8 +82,51 @@ public class ChessGame {
         return true;
     }
 
+    // Goes through all squares and checks if every move will lead to the king being in check
     public boolean isStaleMate(Board board){
+        for (int rank = 0; rank < Constants.BOARD_HEIGHT; rank++) {
+            for (int file = 0; file < Constants.BOARD_WIDTH; file++) {
+                Square squareFrom = board.getSquare(rank,file);
+                if(squareFrom.getPiece() != null) {
+                    for(Square squareTo: getAllValidMovesFromSquare(board.getSquare(rank,file))){
+                        if(isValidMove(board.getSquare(rank,file), squareTo)){
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
         return true;
+    }
+
+    // Goes through all pieces and counts kings, bishops and knights, and decides if its insufficient material
+    public boolean insufficientMaterial(Board board){
+        int total = 0;
+        int king= 0;
+        int knight=0;
+        int bishop=0;
+        for (int rank = 0; rank < Constants.BOARD_HEIGHT; rank++) {
+            for (int file = 0; file < Constants.BOARD_WIDTH; file++) {
+                Square squareFrom = board.getSquare(rank,file);
+                if(squareFrom.getPiece() != null) {
+                    Piece piece = squareFrom.getPiece();
+                    total++;
+                    if (piece instanceof King) king++;
+                    if (piece instanceof Bishop) bishop++;
+                    if (piece instanceof Knight) knight++;
+
+
+                }
+            }
+        }
+        if(total == 2 && king == 2
+                || total == 3 && king == 2 && knight == 1
+                || total == 3 && king == 2 && bishop == 1
+                || total == 4 && king == 2 && knight == 2
+                || total == 4 && king == 2 && bishop == 2) {
+            return true;
+        }
+        return false;
     }
 
     public void move(int fileFrom, int rankFrom, int fileTo, int rankTo, PieceType toPromote){
@@ -97,18 +141,27 @@ public class ChessGame {
             } else if ((rankTo == 7  || rankTo == 0) && squareFrom.getPiece() instanceof Pawn && toPromote == null){
                 System.out.println("Invalid move");
             }else {
-                board.performMove(squareFrom, squareTo, toPromote);
+                board.performMove(squareFrom, squareTo, toPromote, true);
                 switchTurns();
+
+                if (this.insufficientMaterial(board)){
+                    System.out.println("Insufficient Material");
+                    setGameEnded(true);
+                }
                 if (this.kingIsInCheck(board)){
                     if (this.isCheckMate(board)) {
                         System.out.println((playerTurn == Color.WHITE ? Color.BLACK : Color.WHITE) + " won");
+                        setGameEnded(true);
                     } else {
                         System.out.println(playerTurn + " is in check");;
                     }
-                };
-
+                } else {
+                    if (this.isStaleMate(board)) {
+                        System.out.println("Stalemate");
+                        setGameEnded(true);
+                    }
+                }
             }
-
         } catch (ArrayIndexOutOfBoundsException e){
             System.out.println("Invaliddd move");
         }
@@ -116,6 +169,10 @@ public class ChessGame {
 
     public void switchTurns(){
         this.playerTurn = this.playerTurn == Color.WHITE ? Color.BLACK : Color.WHITE;
+    }
+
+    public void setGameEnded(boolean gameEnded) {
+        this.gameEnded = gameEnded;
     }
 
     public void display(){
@@ -128,7 +185,10 @@ public class ChessGame {
             String line;
             int counter = 1;
             while((line = reader.readLine()) != null){
-//                System.out.println(line);
+                if(gameEnded){
+                    System.out.println("Game already ended");
+                    break;
+                }
                 String[] moves = line.split(",");
                 int fileFrom = (int)moves[0].charAt(0) - 97;
                 int rankFrom = (int)moves[0].charAt(1) - 49;
@@ -150,10 +210,5 @@ public class ChessGame {
         ChessGame game = new ChessGame();
         game.playFromFile("ChessGame.txt");
         game.display();
-//        game.move(1,0,2,2); // valid
-//        game.move(6,7,5,5); // valid
-//        game.move(2,2,4,3); // valid
-//        game.move(5,5,4,3); // valid , Capture
-//        game.display();
     }
 }

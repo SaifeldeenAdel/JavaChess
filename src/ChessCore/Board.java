@@ -49,6 +49,7 @@ public class Board implements Cloneable{
     }
 
     public Board clone(){
+        // creates a clone of the board and all the squares inside it
         try{
             Board clonedBoard = (Board)super.clone();
             clonedBoard.squares = new Square[Constants.BOARD_HEIGHT][Constants.BOARD_WIDTH];
@@ -67,18 +68,51 @@ public class Board implements Cloneable{
         return this.squares[rank][file];
     }
 
-    public void performMove(Square squareFrom, Square squareTo, PieceType toPromote){
-//        System.out.println(squareFrom.rank + " " + squareFrom.file);
+    // Performing the given move on the board and printing appropriate message
+    public void performMove(Square squareFrom, Square squareTo, PieceType toPromote, boolean isFinal) {
         Piece movingPiece = squareFrom.getPiece();
         Piece capturedPiece = squareTo.getPiece();
-        squareFrom.removePiece();
-        squareTo.setPiece(movingPiece);
-        movingPiece.setPosition(squareTo);
 
-        if (capturedPiece != null){
-            System.out.println("Captured " + capturedPiece.getType().name().charAt(0) +capturedPiece.getType().name().substring(1).toLowerCase());
+        // Setting their hasMoved variable to stop special moves later
+
+        // Checking if it's a castling move
+        if (movingPiece instanceof King && ((isShortCastleMove(squareFrom, squareTo) || (isLongCastleMove(squareFrom, squareTo))))) {
+            int rank = movingPiece.isWhite() ? 0 : 7;
+            if (isShortCastleMove(squareFrom, squareTo) && ((King) movingPiece).canShortCastle()) {
+                squareFrom.removePiece();
+                getSquare(rank, 6).setPiece(movingPiece);
+                movingPiece.setPosition(getSquare(0, 6)); // setting the king
+
+                Piece rook = getSquare(rank, 7).getPiece();
+                getSquare(rank, 7).removePiece();
+                getSquare(rank, 5).setPiece(rook);
+                rook.setPosition(getSquare(rank, 5)); // setting the rook
+
+                if (isFinal) System.out.println("Castle");
+            } else if (isLongCastleMove(squareFrom, squareTo) && ((King) movingPiece).canLongCastle()) {
+                squareFrom.removePiece();
+                getSquare(rank, 2).setPiece(movingPiece);
+                movingPiece.setPosition(getSquare(rank, 2)); // setting the king
+
+                Piece rook = getSquare(rank, 0).getPiece();
+                getSquare(rank, 0).removePiece();
+                getSquare(rank, 3).setPiece(rook);
+                rook.setPosition(getSquare(rank, 3)); // setting the rook
+
+                if (isFinal) System.out.println("Castle");
+            }
+        } else {
+            // Normal movement
+            squareFrom.removePiece();
+            squareTo.setPiece(movingPiece);
+            movingPiece.setPosition(squareTo);
+
+            if (capturedPiece != null && isFinal) {
+                System.out.println("Captured " + capturedPiece.getType().name().charAt(0) + capturedPiece.getType().name().substring(1).toLowerCase());
+            }
         }
-        if(movingPiece instanceof Pawn) {
+
+        if (movingPiece instanceof Pawn) {
             ((Pawn) movingPiece).setHasMoved();
             if (((Pawn) movingPiece).getEnpassantSquare() != null)
                 ((Pawn) movingPiece).getEnpassantSquare().removePiece();
@@ -86,33 +120,53 @@ public class Board implements Cloneable{
             if (toPromote != null) {
 //                ((Pawn) movingPiece).promoteTo(toPromote);
             }
-        }
-        else{
+        } else {
             //???
-        }
-        lastMove(squareFrom,squareTo);
+
+
+            // Checking if its an en passant
+            if (movingPiece instanceof Pawn) {
+                if (toPromote != null) {
+                    ((Pawn) movingPiece).promoteTo(toPromote);
+                }
+
+            }
+
+            if (isFinal) {
+                if (movingPiece instanceof Pawn) {
+                    ((Pawn) movingPiece).setHasMoved();
+                } else if (movingPiece instanceof King) {
+                    ((King) movingPiece).setHasMoved();
+                } else if (movingPiece instanceof Rook) {
+                    ((Rook) movingPiece).setHasMoved();
+                }
+            }
+
+            lastMove(squareFrom, squareTo);
 //        return true;
+        }
     }
 
-    public Pair <Square, Square> lastMove(Square squareFrom, Square squareTo)
+    public boolean isShortCastleMove(Square squareFrom, Square squareTo){
+        return squareTo.file - squareFrom.file > 1;
+    }
+
+    public boolean isLongCastleMove(Square squareFrom, Square squareTo){
+        return squareFrom.file - squareTo.file > 1;
+    }
+
+    // Getting the last move
+
+    public Pair <Square,Square> lastMove(Square squareFrom, Square squareTo)
     {
-        Pair <Square, Square> lastPieceMove = new Pair<>(squareFrom,squareTo);
-        return lastPieceMove;
+        return  new Pair<>(squareFrom,squareTo);
     }
-
-    // Function that doesn't have any print statements to test the move in the cloned boards
-    public void testMove(Square squareFrom, Square squareTo){
-        Piece movingPiece = squareFrom.getPiece();
-        squareFrom.removePiece();
-        squareTo.setPiece(movingPiece);
-        movingPiece.setPosition(squareTo);
-    }
-
 
     public void displayBoard(){
-//        System.out.println(((King)squares[7][4].getPiece()).isInCheck());
-//        ArrayList<Square> legal = squares[6][3].getPiece().getAllLegalMoves();
+//        squares[0][4].getPiece().printAllLegalMoves();
+//        ArrayList<Square> legal = squares[7][4].getPiece().getAllLegalMoves();
         ArrayList<Square> legal = new ArrayList<>();
+
         for(int rank = Constants.BOARD_HEIGHT -1; rank >=0 ; rank--){
             System.out.println("------------------------------------");
             System.out.print(" " + rank + " |");
