@@ -22,7 +22,7 @@ public class ChessGame {
         Board clonedBoard = this.board.clone();
         Square clonedSquareFrom = clonedBoard.getSquare(squareFrom.rank, squareFrom.file);
         Square cloneSquareTo = clonedBoard.getSquare(squareTo.rank, squareTo.file);
-        clonedBoard.testMove(clonedSquareFrom, cloneSquareTo);
+        clonedBoard.performMove(clonedSquareFrom, cloneSquareTo, PieceType.QUEEN, false);
         if (this.kingIsInCheck(clonedBoard)){
             return false;
         } else{
@@ -141,7 +141,7 @@ public class ChessGame {
             } else if ((rankTo == 7  || rankTo == 0) && squareFrom.getPiece() instanceof Pawn && toPromote == null){
                 System.out.println("Invalid move");
             }else {
-                board.performMove(squareFrom, squareTo, toPromote);
+                board.performMove(squareFrom, squareTo, toPromote, true);
                 switchTurns();
 
                 if (this.insufficientMaterial(board)){
