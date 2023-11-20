@@ -19,6 +19,7 @@ public class ChessGame {
     }
 
     public boolean isValidMove(Square squareFrom, Square squareTo){
+        // Clones and simulates the legals moves to check whether the king will be in check after or not
         Board clonedBoard = this.board.clone();
         Square clonedSquareFrom = clonedBoard.getSquare(squareFrom.rank, squareFrom.file);
         Square cloneSquareTo = clonedBoard.getSquare(squareTo.rank, squareTo.file);
