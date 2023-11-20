@@ -14,6 +14,7 @@ public class Board implements Cloneable{
             }
         }
         initialisePieces();
+        lastMove(null,null);
     }
 
     public void initialisePieces(){
@@ -81,21 +82,21 @@ public class Board implements Cloneable{
             ((Pawn) movingPiece).setHasMoved();
             if (((Pawn) movingPiece).getEnpassantSquare() != null)
                 ((Pawn) movingPiece).getEnpassantSquare().removePiece();
-            //enpassantSquare  set to null
+
             if (toPromote != null) {
-                ((Pawn) movingPiece).promoteTo(toPromote);
-                //enpassantSquare  set to null
+//                ((Pawn) movingPiece).promoteTo(toPromote);
             }
-        } else{
+        }
+        else{
+            //???
         }
         lastMove(squareFrom,squareTo);
 //        return true;
     }
 
-    public List<Pair <Square, Square>> lastMove(Square squareFrom, Square squareTo)
+    public Pair <Square, Square> lastMove(Square squareFrom, Square squareTo)
     {
-        List<Pair <Square, Square>> lastPieceMove = new ArrayList<>();
-        lastPieceMove.add(Pair.with(squareFrom,squareTo));
+        Pair <Square, Square> lastPieceMove = new Pair<>(squareFrom,squareTo);
         return lastPieceMove;
     }
 

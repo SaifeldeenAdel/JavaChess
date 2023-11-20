@@ -91,6 +91,7 @@ public class Pawn extends Piece {
         }
         return false;
     }
+
     public void setHasMoved () {
             this.hasMoved = true;
     }
@@ -101,13 +102,16 @@ public class Pawn extends Piece {
     public boolean enpassantValid (Square squareFrom, Square squareTo){
         if(!Square.outOfBounds(squareFrom.rank, squareFrom.file+1))
         {
-            //System.out.println("enpassant method");
+            //System.out.println("cr pawn's pos: "+ this.getPosition().rank +this.getPosition().file);
             Piece p1 = this.getBoard().getSquare(squareFrom.rank, squareFrom.file + 1).getPiece();
             if(p1!=null)
             {
+                //System.out.println("last move: "+(this.getBoard().lastMove(squareFrom, squareTo).getValue1().rank)+(this.getBoard().lastMove(squareFrom, squareTo).getValue1().file));
+                //System.out.println("p1's position"+p1.getPosition().rank + p1.getPosition().file);
+
                 if(p1 instanceof Pawn){
-                    if(this.getBoard().lastMove(squareFrom, squareTo).get(0).getValue1()== p1.getPosition()){
-                        if (this.getBoard().lastMove(squareFrom, squareTo).get(0).getValue1().rank - this.getBoard().lastMove(squareFrom, squareTo).get(0).getValue0().rank == 2)
+                    if((this.getBoard().lastMove(squareFrom, squareTo).getValue1().rank== p1.getPosition().rank ) && (this.getBoard().lastMove(squareFrom, squareTo).getValue1().file == p1.getPosition().file)){
+                        if (this.getBoard().lastMove(squareFrom, squareTo).getValue1().rank - this.getBoard().lastMove(squareFrom, squareTo).getValue0().rank == 2)
                         {
                             return true;
                         }
@@ -117,12 +121,13 @@ public class Pawn extends Piece {
         }
         if(!Square.outOfBounds(squareFrom.rank, squareFrom.file-1))
         {
+
             Piece p2 = this.getBoard().getSquare(squareFrom.rank, squareFrom.file - 1).getPiece();
             if (p2 != null) {
                 if (p2 instanceof Pawn) {
                     //checks if last move is of a pawn and its destination square is equal to the square beside the current piece
-                    if (this.getBoard().lastMove(squareFrom, squareTo).get(0).getValue1() == p2.getPosition()) {
-                        if (this.getBoard().lastMove(squareFrom, squareTo).get(0).getValue1().rank - this.getBoard().lastMove(squareFrom, squareTo).get(0).getValue0().rank == 2) {
+                    if (this.getBoard().lastMove(squareFrom, squareTo).getValue1() == p2.getPosition()) {
+                        if (this.getBoard().lastMove(squareFrom, squareTo).getValue1().rank - this.getBoard().lastMove(squareFrom, squareTo).getValue0().rank == 2) {
                             return true;
                         }
                     }
@@ -132,6 +137,10 @@ public class Pawn extends Piece {
         }
         return false;
         }
+
+//        public void promoteTo(Promotion toPromote){
+//
+//        }
 
 
 }
