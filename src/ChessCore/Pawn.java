@@ -138,8 +138,20 @@ public class Pawn extends Piece {
         return false;
         }
 
-    public void promoteTo(PieceType toPromote){
-        return;
+    public void promoteTo(Square squareTo, PieceType toPromote){
+        if(squareTo.rank==7 || squareTo.rank==0)
+        {
+            if(toPromote.equals(PieceType.QUEEN)){
+                Piece promotedToPiece = new Queen(this.getBoard(),squareTo,this.getColor());
+            } else if (toPromote.equals(PieceType.KNIGHT)) {
+                Piece promotedToPiece = new Knight(this.getBoard(),squareTo,this.getColor());
+            } else if (toPromote.equals(PieceType.ROOK)) {
+                Piece promotedToPiece = new Rook(this.getBoard(),squareTo,this.getColor());
+            } else if (toPromote.equals(PieceType.BISHOP)) {
+                Piece promotedToPiece = new Bishop(this.getBoard(),squareTo,this.getColor());
+            }
+
+        }
     }
     //enpassantSquare getter method
 //    public boolean enpassantValid (Square squareFrom, Square squareTo){

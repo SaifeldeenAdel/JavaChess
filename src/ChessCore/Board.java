@@ -101,7 +101,8 @@ public class Board implements Cloneable{
 
                 if (isFinal) System.out.println("Castle");
             }
-        } else {
+        }
+        else {
             // Normal movement
             squareFrom.removePiece();
             squareTo.setPiece(movingPiece);
@@ -112,25 +113,14 @@ public class Board implements Cloneable{
             }
         }
 
+
+        // Checking if pawn is to be promoted
         if (movingPiece instanceof Pawn) {
-            ((Pawn) movingPiece).setHasMoved();
-            if (((Pawn) movingPiece).getEnpassantSquare() != null)
-                ((Pawn) movingPiece).getEnpassantSquare().removePiece();
-
             if (toPromote != null) {
-//                ((Pawn) movingPiece).promoteTo(toPromote);
+                ((Pawn) movingPiece).promoteTo(squareTo,toPromote);
             }
-        } else {
-            //???
 
-
-            // Checking if its an en passant
-            if (movingPiece instanceof Pawn) {
-                if (toPromote != null) {
-                    ((Pawn) movingPiece).promoteTo(toPromote);
-                }
-
-            }
+        }
 
             if (isFinal) {
                 if (movingPiece instanceof Pawn) {
@@ -144,7 +134,7 @@ public class Board implements Cloneable{
 
             lastMove(squareFrom, squareTo);
 //        return true;
-        }
+
     }
 
     public boolean isShortCastleMove(Square squareFrom, Square squareTo){
