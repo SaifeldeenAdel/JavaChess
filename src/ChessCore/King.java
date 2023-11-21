@@ -20,7 +20,8 @@ public class King extends Piece {
         int vertical = Math.abs(squareTo.rank - squareFrom.rank);
 
         int deltaX = squareTo.file - squareFrom.file;
-        // Check if the move is within the king's range (one square in any direction)
+
+        // Checking if it's a castling move
         if(!hasMoved && (deltaX == 2 || deltaX == 3) && vertical == 0 && canShortCastle()){
             return true;
         }
@@ -29,6 +30,7 @@ public class King extends Piece {
             return true;
         }
 
+        // Check if the move is within the king's range (one square in any direction)
         if ((horizontal <= 1 && vertical <= 1) && (horizontal + vertical > 0)) {
             return true;
         } else {
@@ -37,6 +39,7 @@ public class King extends Piece {
     }
 
     public boolean canShortCastle(){
+        // Checking if king can short castle by checking all squares beside it and the rook have moved or not
         if (isInCheck()) return false;
         int rank = this.isWhite() ? 0 : 7;
         if (!hasMoved && this.getPosition().rank == rank && this.getPosition().file == 4){
@@ -54,6 +57,7 @@ public class King extends Piece {
     }
 
     public boolean canLongCastle(){
+        // Checking if king can long castle by checking all squares beside it and the rook have moved or not
         if (isInCheck()) return false;
         int rank = this.isWhite() ? 0 : 7;
         if (!hasMoved && this.getPosition().rank == rank && this.getPosition().file == 4){

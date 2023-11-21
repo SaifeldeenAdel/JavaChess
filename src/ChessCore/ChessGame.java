@@ -154,7 +154,7 @@ public class ChessGame {
                         System.out.println((playerTurn == Color.WHITE ? Color.BLACK : Color.WHITE) + " won");
                         setGameEnded(true);
                     } else {
-                        System.out.println(playerTurn + " is in check");;
+                        System.out.println(playerTurn + " in check");;
                     }
                 } else {
                     if (this.isStaleMate(board)) {
@@ -164,7 +164,7 @@ public class ChessGame {
                 }
             }
         } catch (ArrayIndexOutOfBoundsException e){
-            System.out.println("Invaliddd move");
+            System.out.println("Invalid move");
         }
     }
 
@@ -189,17 +189,18 @@ public class ChessGame {
                 if(gameEnded){
                     System.out.println("Game already ended");
                     break;
-                }
-                String[] moves = line.split(",");
-                int fileFrom = (int)moves[0].charAt(0) - 97;
-                int rankFrom = (int)moves[0].charAt(1) - 49;
-                int fileTo = (int)moves[1].charAt(0) - 97;
-                int rankTo = (int)moves[1].charAt(1) - 49;
+                } else {
+                    String[] moves = line.split(",");
+                    int fileFrom = (int)moves[0].charAt(0) - 97;
+                    int rankFrom = (int)moves[0].charAt(1) - 49;
+                    int fileTo = (int)moves[1].charAt(0) - 97;
+                    int rankTo = (int)moves[1].charAt(1) - 49;
 
-                if (moves.length == 2){
-                    this.move(fileFrom, rankFrom, fileTo, rankTo, null);
-                } else if (moves.length == 3) {
-                    this.move(fileFrom, rankFrom, fileTo, rankTo, PieceType.getType(moves[2].charAt(0)));
+                    if (moves.length == 2){
+                        this.move(fileFrom, rankFrom, fileTo, rankTo, null);
+                    } else if (moves.length == 3) {
+                        this.move(fileFrom, rankFrom, fileTo, rankTo, PieceType.getType(moves[2].charAt(0)));
+                    }
                 }
             }
         } catch (IOException e) {
@@ -210,6 +211,5 @@ public class ChessGame {
     public static void main(String[] args) {
         ChessGame game = new ChessGame();
         game.playFromFile("ChessGame.txt");
-        game.display();
     }
 }

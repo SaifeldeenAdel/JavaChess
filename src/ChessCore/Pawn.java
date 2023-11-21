@@ -9,7 +9,7 @@ public class Pawn extends Piece {
         super(board, square, color, PieceType.PAWN);
         this.hasMoved = false;
     }
-    
+
     @Override
     public boolean isValidMove(Square squareFrom, Square squareTo) {
         if (!super.isValidMove(squareFrom, squareTo)) {
@@ -20,13 +20,17 @@ public class Pawn extends Piece {
 
         // Forward movements
         if (vertical == 2 && horizontal == 0 && !hasMoved && squareTo.getPiece() == null && this.isWhite()) {
-            return true;
+            if (getBoard().getSquare(squareTo.rank - 1, squareTo.file).getPiece() == null){
+                return true;
+            }
         }
         if (vertical == 1 && horizontal == 0 && squareTo.getPiece() == null && this.isWhite()) {
             return true;
         }
         if (vertical == -2 && horizontal == 0 && !hasMoved && squareTo.getPiece() == null && !this.isWhite()) {
-            return true;
+            if (getBoard().getSquare(squareTo.rank + 1, squareTo.file).getPiece() == null){
+                return true;
+            }
         }
         if (vertical == -1 && horizontal == 0 && squareTo.getPiece() == null && !this.isWhite()) {
             return true;
@@ -117,6 +121,7 @@ public class Pawn extends Piece {
 
         }
     }
+
     public boolean canPromote(Square From, Square squareTo){
         if(squareTo.rank==7 || squareTo.rank==0){
             return true;

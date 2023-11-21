@@ -73,12 +73,13 @@ public class Board implements Cloneable{
 
         // Checking if it's a castling move
         if (movingPiece instanceof King && ((isShortCastleMove(squareFrom, squareTo) || (isLongCastleMove(squareFrom, squareTo))))){
+//            if (isFinal)System.out.println("heree");
             int rank = movingPiece.isWhite() ? 0 : 7;
             if(isShortCastleMove(squareFrom, squareTo) && ((King)movingPiece).canShortCastle()){
                 // Short castle
                 squareFrom.removePiece();
                 getSquare(rank,6).setPiece(movingPiece);
-                movingPiece.setPosition(getSquare(0,6)); // setting the king
+                movingPiece.setPosition(getSquare(rank,6)); // setting the king
 
                 Piece rook = getSquare(rank,7).getPiece();
                 getSquare(rank,7).removePiece();
@@ -100,11 +101,15 @@ public class Board implements Cloneable{
                 if (isFinal) System.out.println("Castle") ;
             }
         } else if(movingPiece instanceof Pawn && ((Pawn)movingPiece).enpassantValid(squareFrom, squareTo)) {
+            // Enpassant Movement
             squareFrom.removePiece();
             squareTo.setPiece(movingPiece);
             enpassantSquare.removePiece();
             movingPiece.setPosition(squareTo);
-            if (isFinal) System.out.println("Enpassant") ;
+            if (isFinal) {
+                System.out.println("Enpassant") ;
+                System.out.println("Captured Pawn") ;
+            }
 
         } else if (movingPiece instanceof Pawn && ((Pawn)movingPiece).isPromoting(squareFrom,squareTo)) {
             // Normal movement
@@ -179,7 +184,7 @@ public class Board implements Cloneable{
 
     public void displayBoard(){
 //        squares[0][4].getPiece().printAllLegalMoves();
-//        ArrayList<Square> legal = squares[6][4].getPiece().getAllLegalMoves();
+//        ArrayList<Square> legal = squares[7][4].getPiece().getAllLegalMoves();
         ArrayList<Square> legal = new ArrayList<>();
 
         for(int rank = Constants.BOARD_HEIGHT -1; rank >=0 ; rank--){
