@@ -43,7 +43,7 @@ public class Board implements Cloneable{
         squares[7][6].setPiece(new Knight(this, squares[7][6], Color.BLACK));
         squares[7][7].setPiece(new Rook(this, squares[7][7], Color.BLACK));
 
-//        squares[5][3].setPiece(new Pawn(this, squares[5][3], Color.WHITE));
+      //  squares[6][7].setPiece(new Pawn(this, squares[6][7], Color.WHITE));
 //    //        squares[2][4].setPiece(new Queen(this, squares[2][4], Color.BLACK));
 //        squares[2][3].setPiece(new Pawn(this, squares[2][3], Color.BLACK));
 
@@ -105,14 +105,17 @@ public class Board implements Cloneable{
             squareFrom.removePiece();
             squareTo.setPiece(movingPiece);
             enpassantSquare.removePiece();
+            movingPiece.setPosition(squareTo);
             if (isFinal) System.out.println("Enpassant") ;
 
         }
-//        else if (movingPiece instanceof Pawn) {
-//            if (toPromote != null) {
-//                ((Pawn) movingPiece).promoteTo(squareTo,toPromote);
-//            }
-//        }
+        else if (movingPiece instanceof Pawn && ((Pawn) movingPiece).canPromote(squareFrom,squareTo) ) {
+            if (toPromote != null) {
+                System.out.println("working?");
+                ((Pawn) movingPiece).promoteTo(squareTo,toPromote);
+                squareFrom.removePiece();
+            }
+        }
         else {
             // Normal movement
             squareFrom.removePiece();
