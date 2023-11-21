@@ -1,8 +1,18 @@
 package ChessCore;
 
 public class Rook extends Piece{
+    private boolean hasMoved;
     public Rook(Board board, Square square, Color color) {
         super(board, square, color, PieceType.ROOK);
+        hasMoved = false;
+    }
+
+    public void setHasMoved() {
+        this.hasMoved = true;
+    }
+
+    public boolean isHasMoved() {
+        return hasMoved;
     }
 
     @Override

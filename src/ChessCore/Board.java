@@ -1,9 +1,13 @@
 package ChessCore;
 
 import java.util.ArrayList;
+import org.javatuples.Pair;
+import java.util.List;
 
 public class Board implements Cloneable{
     private Square[][] squares = new Square[Constants.BOARD_HEIGHT][Constants.BOARD_WIDTH];
+    private ArrayList<Square> lastMove = null;
+    private Square enpassantSquare;
 
     public Board(){
         for(int rank =0;rank<Constants.BOARD_HEIGHT; rank++){
@@ -17,7 +21,7 @@ public class Board implements Cloneable{
     public void initialisePieces(){
         for(int i = 0; i< Constants.BOARD_WIDTH; i++){
             squares[1][i].setPiece(new Pawn(this, squares[1][i], Color.WHITE));
-            squares[6][i].setPiece(new Pawn(this, squares[1][i], Color.BLACK));
+            squares[6][i].setPiece(new Pawn(this, squares[6][i], Color.BLACK));
         }
         // White Pieces
         squares[0][0].setPiece(new Rook(this, squares[0][0], Color.WHITE));
@@ -39,12 +43,14 @@ public class Board implements Cloneable{
         squares[7][6].setPiece(new Knight(this, squares[7][6], Color.BLACK));
         squares[7][7].setPiece(new Rook(this, squares[7][7], Color.BLACK));
 
-//        squares[2][0].setPiece(new King(this, squares[2][0], Color.BLACK));
-//        squares[3][3].setPiece(new Queen(this, squares[3][3], Color.WHITE));
+      //  squares[6][7].setPiece(new Pawn(this, squares[6][7], Color.WHITE));
+//    //        squares[2][4].setPiece(new Queen(this, squares[2][4], Color.BLACK));
+//        squares[2][3].setPiece(new Pawn(this, squares[2][3], Color.BLACK));
 
     }
 
     public Board clone(){
+        // creates a clone of the board and all the squares inside it
         try{
             Board clonedBoard = (Board)super.clone();
             clonedBoard.squares = new Square[Constants.BOARD_HEIGHT][Constants.BOARD_WIDTH];
@@ -63,33 +69,117 @@ public class Board implements Cloneable{
         return this.squares[rank][file];
     }
 
-    public void performMove(Square squareFrom, Square squareTo){
-//        System.out.println(squareFrom.rank + " " + squareFrom.file);
+    // Performing the given move on the board and printing appropriate message
+    // Performing the given move on the board and printing appropriate message
+    public void performMove(Square squareFrom, Square squareTo, PieceType toPromote, boolean isFinal){
         Piece movingPiece = squareFrom.getPiece();
-        squareFrom.removePiece();
-
         Piece capturedPiece = squareTo.getPiece();
-        if (capturedPiece != null){
-            System.out.println("Captured " + capturedPiece.getType().name().charAt(0) +capturedPiece.getType().name().substring(1).toLowerCase());
+
+        // Checking if it's a castling move
+        if (movingPiece instanceof King && ((isShortCastleMove(squareFrom, squareTo) || (isLongCastleMove(squareFrom, squareTo))))){
+            int rank = movingPiece.isWhite() ? 0 : 7;
+            if(isShortCastleMove(squareFrom, squareTo) && ((King)movingPiece).canShortCastle()){
+                squareFrom.removePiece();
+                getSquare(rank,6).setPiece(movingPiece);
+                movingPiece.setPosition(getSquare(0,6)); // setting the king
+
+                Piece rook = getSquare(rank,7).getPiece();
+                getSquare(rank,7).removePiece();
+                getSquare(rank,5).setPiece(rook);
+                rook.setPosition(getSquare(rank,5)); // setting the rook
+
+                if (isFinal) System.out.println("Castle") ;
+            } else if (isLongCastleMove(squareFrom, squareTo) && ((King)movingPiece).canLongCastle()){
+                squareFrom.removePiece();
+                getSquare(rank,2).setPiece(movingPiece);
+                movingPiece.setPosition(getSquare(rank,2)); // setting the king
+
+                Piece rook = getSquare(rank,0).getPiece();
+                getSquare(rank,0).removePiece();
+                getSquare(rank,3).setPiece(rook);
+                rook.setPosition(getSquare(rank,3)); // setting the rook
+
+                if (isFinal) System.out.println("Castle") ;
+            }
+        }  else if(movingPiece instanceof Pawn && ((Pawn)movingPiece).enpassantValid(squareFrom, squareTo)) {
+            squareFrom.removePiece();
+            squareTo.setPiece(movingPiece);
+            enpassantSquare.removePiece();
+            movingPiece.setPosition(squareTo);
+            if (isFinal) System.out.println("Enpassant") ;
+
         }
-        squareTo.setPiece(movingPiece);
-        movingPiece.setPosition(squareTo);
-//        return true;
+        else if (movingPiece instanceof Pawn && ((Pawn) movingPiece).canPromote(squareFrom,squareTo) ) {
+            if (toPromote != null) {
+                System.out.println("working?");
+                ((Pawn) movingPiece).promoteTo(squareTo,toPromote);
+                squareFrom.removePiece();
+            }
+        }
+        else {
+            // Normal movement
+            squareFrom.removePiece();
+            squareTo.setPiece(movingPiece);
+            movingPiece.setPosition(squareTo);
+
+            if (capturedPiece != null && isFinal) {
+                System.out.println("Captured " + capturedPiece.getType().name().charAt(0) + capturedPiece.getType().name().substring(1).toLowerCase());
+            }
+        }
+
+        // Setting their hasMoved variable to stop special moves later
+        if(isFinal){
+            setLastMove(squareFrom,squareTo);
+            if(movingPiece instanceof Pawn){
+                ((Pawn)movingPiece).setHasMoved();
+            } else if (movingPiece instanceof King){
+                ((King) movingPiece).setHasMoved();
+            } else if (movingPiece instanceof Rook){
+                ((Rook) movingPiece).setHasMoved();
+            }
+        }
     }
 
-    // Function that doesn't have any print statements to test the move in the cloned boards
-    public void testMove(Square squareFrom, Square squareTo){
-        Piece movingPiece = squareFrom.getPiece();
-        squareFrom.removePiece();
-        squareTo.setPiece(movingPiece);
-        movingPiece.setPosition(squareTo);
+    public boolean isShortCastleMove(Square squareFrom, Square squareTo){
+        return squareTo.file - squareFrom.file > 1;
     }
 
+    public boolean isLongCastleMove(Square squareFrom, Square squareTo){
+        return squareFrom.file - squareTo.file > 1;
+    }
+
+//    // Getting the last move
+//    public List<Pair <Square, Square>> lastMove(Square squareFrom, Square squareTo)
+//    {
+//
+//        List<Pair <Square, Square>> lastPieceMove = new ArrayList<>();
+//        lastPieceMove.add(Pair.with(squareFrom,squareTo));
+//        return lastPieceMove;
+//    }
+
+    public void setLastMove(Square squareFrom, Square squareTo) {
+        this.lastMove = new ArrayList<>();
+        this.lastMove.add(squareFrom);
+        this.lastMove.add(squareTo);
+    }
+
+    public ArrayList<Square> getLastMove() {
+        return lastMove;
+    }
+
+    public void setEnpassantSquare(Square enpassantSquare) {
+        this.enpassantSquare = enpassantSquare;
+    }
+
+    public Square getEnpassantSquare() {
+        return enpassantSquare;
+    }
 
     public void displayBoard(){
-//        System.out.println(((King)squares[7][4].getPiece()).isInCheck());
-//        ArrayList<Square> legal = squares[2][1].getPiece().getAllLegalMoves();
+//        squares[0][4].getPiece().printAllLegalMoves();
+//        ArrayList<Square> legal = squares[6][4].getPiece().getAllLegalMoves();
         ArrayList<Square> legal = new ArrayList<>();
+
         for(int rank = Constants.BOARD_HEIGHT -1; rank >=0 ; rank--){
             System.out.println("------------------------------------");
             System.out.print(" " + rank + " |");
