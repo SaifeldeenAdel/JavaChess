@@ -10,7 +10,6 @@ public class Pawn extends Piece {
         this.hasMoved = false;
     }
 
-    //moving but not moving 2 positions error ?
     @Override
     public boolean isValidMove(Square squareFrom, Square squareTo) {
         if (!super.isValidMove(squareFrom, squareTo)) {
@@ -52,8 +51,11 @@ public class Pawn extends Piece {
             this.hasMoved = true;
     }
 
-    public void promoteTo(PieceType toPromote){
-        return;
+    public boolean isPromoting(Square squareFrom, Square squareTo){
+        if(this.isWhite() && squareTo.rank==7 || !this.isWhite() && squareTo.rank == 0){
+            return true;
+        }
+        return false;
     }
 
     public boolean enpassantValid (Square squareFrom, Square squareTo){

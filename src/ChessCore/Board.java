@@ -43,9 +43,7 @@ public class Board implements Cloneable{
         squares[7][6].setPiece(new Knight(this, squares[7][6], Color.BLACK));
         squares[7][7].setPiece(new Rook(this, squares[7][7], Color.BLACK));
 
-//        squares[5][3].setPiece(new Pawn(this, squares[5][3], Color.WHITE));
-//    //        squares[2][4].setPiece(new Queen(this, squares[2][4], Color.BLACK));
-//        squares[2][3].setPiece(new Pawn(this, squares[2][3], Color.BLACK));
+
 
     }
 
@@ -78,6 +76,7 @@ public class Board implements Cloneable{
         if (movingPiece instanceof King && ((isShortCastleMove(squareFrom, squareTo) || (isLongCastleMove(squareFrom, squareTo))))){
             int rank = movingPiece.isWhite() ? 0 : 7;
             if(isShortCastleMove(squareFrom, squareTo) && ((King)movingPiece).canShortCastle()){
+                // Short castle
                 squareFrom.removePiece();
                 getSquare(rank,6).setPiece(movingPiece);
                 movingPiece.setPosition(getSquare(0,6)); // setting the king
@@ -89,6 +88,7 @@ public class Board implements Cloneable{
 
                 if (isFinal) System.out.println("Castle") ;
             } else if (isLongCastleMove(squareFrom, squareTo) && ((King)movingPiece).canLongCastle()){
+                // Long castle
                 squareFrom.removePiece();
                 getSquare(rank,2).setPiece(movingPiece);
                 movingPiece.setPosition(getSquare(rank,2)); // setting the king
@@ -100,11 +100,26 @@ public class Board implements Cloneable{
 
                 if (isFinal) System.out.println("Castle") ;
             }
+
         } else if(movingPiece instanceof Pawn && ((Pawn)movingPiece).enpassantValid(squareFrom, squareTo)) {
             squareFrom.removePiece();
             squareTo.setPiece(movingPiece);
             enpassantSquare.removePiece();
             if (isFinal) System.out.println("Enpassant") ;
+
+        } else if (movingPiece instanceof Pawn && ((Pawn)movingPiece).isPromoting(squareFrom,squareTo)) {
+            // Normal movement
+            squareFrom.removePiece();
+            if(toPromote == PieceType.QUEEN){
+                movingPiece = new Queen(this, squareTo, movingPiece.getColor());
+            } else if (toPromote == PieceType.KNIGHT){
+                movingPiece = new Knight(this, squareTo, movingPiece.getColor());
+            }else if (toPromote == PieceType.ROOK){
+                movingPiece = new Rook(this, squareTo, movingPiece.getColor());
+            }else if (toPromote == PieceType.BISHOP){
+                movingPiece = new Bishop(this, squareTo, movingPiece.getColor());
+            }
+            squareTo.setPiece(movingPiece);
 
         } else {
             // Normal movement
@@ -112,9 +127,9 @@ public class Board implements Cloneable{
             squareTo.setPiece(movingPiece);
             movingPiece.setPosition(squareTo);
 
-            if (capturedPiece != null && isFinal){
-                System.out.println("Captured " + capturedPiece.getType().name().charAt(0) +capturedPiece.getType().name().substring(1).toLowerCase());
-            }
+        }
+        if (capturedPiece != null && isFinal){
+            System.out.println("Captured " + capturedPiece.getType().name().charAt(0) +capturedPiece.getType().name().substring(1).toLowerCase());
         }
 
         // Setting their hasMoved variable to stop special moves later
