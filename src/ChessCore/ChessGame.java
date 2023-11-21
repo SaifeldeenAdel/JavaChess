@@ -164,7 +164,7 @@ public class ChessGame {
                 }
             }
         } catch (ArrayIndexOutOfBoundsException e){
-            System.out.println("Invalid move");
+            System.out.println("Invaliddd move");
         }
     }
 

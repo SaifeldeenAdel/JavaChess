@@ -43,8 +43,6 @@ public class Board implements Cloneable{
         squares[7][6].setPiece(new Knight(this, squares[7][6], Color.BLACK));
         squares[7][7].setPiece(new Rook(this, squares[7][7], Color.BLACK));
 
-
-
     }
 
     public Board clone(){
@@ -67,6 +65,7 @@ public class Board implements Cloneable{
         return this.squares[rank][file];
     }
 
+    // Performing the given move on the board and printing appropriate message
     // Performing the given move on the board and printing appropriate message
     public void performMove(Square squareFrom, Square squareTo, PieceType toPromote, boolean isFinal){
         Piece movingPiece = squareFrom.getPiece();
@@ -100,11 +99,11 @@ public class Board implements Cloneable{
 
                 if (isFinal) System.out.println("Castle") ;
             }
-
         } else if(movingPiece instanceof Pawn && ((Pawn)movingPiece).enpassantValid(squareFrom, squareTo)) {
             squareFrom.removePiece();
             squareTo.setPiece(movingPiece);
             enpassantSquare.removePiece();
+            movingPiece.setPosition(squareTo);
             if (isFinal) System.out.println("Enpassant") ;
 
         } else if (movingPiece instanceof Pawn && ((Pawn)movingPiece).isPromoting(squareFrom,squareTo)) {
@@ -121,12 +120,19 @@ public class Board implements Cloneable{
             }
             squareTo.setPiece(movingPiece);
 
-        } else {
+        }
+        else if (movingPiece instanceof Pawn && ((Pawn) movingPiece).canPromote(squareFrom,squareTo) ) {
+            if (toPromote != null) {
+                System.out.println("working?");
+                ((Pawn) movingPiece).promoteTo(squareTo,toPromote);
+                squareFrom.removePiece();
+            }
+        }
+        else {
             // Normal movement
             squareFrom.removePiece();
             squareTo.setPiece(movingPiece);
             movingPiece.setPosition(squareTo);
-
         }
         if (capturedPiece != null && isFinal){
             System.out.println("Captured " + capturedPiece.getType().name().charAt(0) +capturedPiece.getType().name().substring(1).toLowerCase());
@@ -152,15 +158,6 @@ public class Board implements Cloneable{
     public boolean isLongCastleMove(Square squareFrom, Square squareTo){
         return squareFrom.file - squareTo.file > 1;
     }
-
-//    // Getting the last move
-//    public List<Pair <Square, Square>> lastMove(Square squareFrom, Square squareTo)
-//    {
-//
-//        List<Pair <Square, Square>> lastPieceMove = new ArrayList<>();
-//        lastPieceMove.add(Pair.with(squareFrom,squareTo));
-//        return lastPieceMove;
-//    }
 
     public void setLastMove(Square squareFrom, Square squareTo) {
         this.lastMove = new ArrayList<>();

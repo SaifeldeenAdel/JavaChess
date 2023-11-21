@@ -9,7 +9,7 @@ public class Pawn extends Piece {
         super(board, square, color, PieceType.PAWN);
         this.hasMoved = false;
     }
-
+    
     @Override
     public boolean isValidMove(Square squareFrom, Square squareTo) {
         if (!super.isValidMove(squareFrom, squareTo)) {
@@ -48,7 +48,7 @@ public class Pawn extends Piece {
         return false;
     }
     public void setHasMoved () {
-            this.hasMoved = true;
+        this.hasMoved = true;
     }
 
     public boolean isPromoting(Square squareFrom, Square squareTo){
@@ -99,5 +99,30 @@ public class Pawn extends Piece {
         }
         return false;
     }
+
+    public void promoteTo(Square squareTo, PieceType toPromote){
+        if(squareTo.rank==7 || squareTo.rank==0)
+        {
+            Piece promotedToPiece = null;
+            if(toPromote.equals(PieceType.QUEEN)){
+                 promotedToPiece = new Queen(this.getBoard(),squareTo,this.getColor());
+            } else if (toPromote.equals(PieceType.KNIGHT)) {
+                 promotedToPiece = new Knight(this.getBoard(),squareTo,this.getColor());
+            } else if (toPromote.equals(PieceType.ROOK)) {
+                 promotedToPiece = new Rook(this.getBoard(),squareTo,this.getColor());
+            } else if (toPromote.equals(PieceType.BISHOP)) {
+                 promotedToPiece = new Bishop(this.getBoard(), squareTo, this.getColor());
+            }
+            squareTo.setPiece(promotedToPiece);
+
+        }
+    }
+    public boolean canPromote(Square From, Square squareTo){
+        if(squareTo.rank==7 || squareTo.rank==0){
+            return true;
+        }
+        return false;
+    }
+
 
 }
